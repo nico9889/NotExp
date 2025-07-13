@@ -3,11 +3,11 @@ import {TexImage} from "../../xournalpp/teximage";
 import {MathMLToLaTeX} from "mathml-to-latex";
 import {LOG, Offsets, PageSize} from "../converter";
 import {IMAGE_BASE64_REGEXP} from "./images";
-import {mathjax} from 'mathjax-full/mjs/mathjax.js'
-import {MathML} from 'mathjax-full/mjs/input/mathml.js'
-import {SVG} from 'mathjax-full/mjs/output/svg.js'
-import {browserAdaptor} from 'mathjax-full/mjs/adaptors/browserAdaptor.js'
-import {RegisterHTMLHandler} from 'mathjax-full/mjs/handlers/html.js'
+import {mathjax} from '@mathjax/src/mjs/mathjax.js';
+import {browserAdaptor} from "@mathjax/src/mjs/adaptors/browserAdaptor.js";
+import {RegisterHTMLHandler} from "@mathjax/src/mjs/handlers/html.js";
+import {MathML} from "@mathjax/src/mjs/input/mathml.js";
+import {SVG} from "@mathjax/src/mjs/output/svg.js";
 import {Layer} from "../../xournalpp/page";
 
 const UNSAFE_XML_SPACE = new RegExp("&nbsp;", "g");
@@ -18,8 +18,8 @@ function sanitize_latex(latex: string): string{
     return decodeURI(latex.replace(UNSAFE_XML_SPACE, " "));
 }
 
-const ADAPTOR = browserAdaptor();
-RegisterHTMLHandler(ADAPTOR);
+const adaptor = browserAdaptor();
+RegisterHTMLHandler(adaptor);
 
 export async function convertMathMLBlocks(layer: Layer, offsets: Offsets, math_dark_mode: boolean, math_quality: MathQuality, page_size: PageSize, zoom_level: number) {
     LOG.info("Converting MathML blocks");
@@ -37,8 +37,7 @@ export async function convertMathMLBlocks(layer: Layer, offsets: Offsets, math_d
         InputJax: new MathML(),
         OutputJax: new SVG({
             mathmlSpacing: true,
-            fontCache: 'local',
-            internalSpeechTitles: false
+            fontCache: 'local'
         }),
     });
     for (const container of math_containers) {
@@ -50,7 +49,7 @@ export async function convertMathMLBlocks(layer: Layer, offsets: Offsets, math_d
         try {
             const node = mathDocument.convert(container.innerHTML);
 
-            const blob = new Blob([ADAPTOR.innerHTML(node)], {type: "image/svg+xml;charset=utf-8"});
+            const blob = new Blob([adaptor.innerHTML(node)], {type: "image/svg+xml;charset=utf-8"});
 
             const url = URL.createObjectURL(blob);
 
