@@ -80,7 +80,7 @@ fs.readdirSync('./_locales/').forEach(lang_code => {
 fs.rmSync('./dist', {recursive: true, force: true});
 
 // Bundling minified JS
-await esbuild.build({
+const result = await esbuild.build({
     entryPoints: [
         "./src/content.ts",
         "./src/notexp.ts",
@@ -90,8 +90,10 @@ await esbuild.build({
     minify: true,
     bundle: true,
     outdir: "./dist",
+    metafile: true,
 });
 
+fs.writeFileSync('meta.json', JSON.stringify(result.metafile))
 
 // Bundling minified CSS
 await esbuild.build({
