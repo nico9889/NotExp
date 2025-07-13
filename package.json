@@ -12,11 +12,11 @@
   "author": "",
   "license": "GPL-3.0",
   "devDependencies": {
+    "@mathjax/src": "^4.0.0-rc.4",
     "@types/chrome": "^0.1.0",
     "@types/firefox": "^0.0.34",
     "@types/web": "^0.0.246",
     "@types/webextension-polyfill": "^0.12.3",
-    "@mathjax/src": "^4.0.0-rc.4",
     "esbuild": "^0.25.6",
     "html-minifier-terser": "^7.2.0",
     "mathjax": "^4.0.0-rc.4",
