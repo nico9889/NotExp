@@ -85,7 +85,7 @@ await esbuild.build({
         "./src/content.ts",
         "./src/notexp.ts",
     ],
-    format: 'cjs',
+    format: 'esm',
     platform: "browser",
     minify: true,
     bundle: true,
@@ -98,7 +98,7 @@ await esbuild.build({
     entryPoints: [
         "./public/popup.css"
     ],
-    format: 'cjs',
+    format: 'esm',
     platform: "browser",
     minify: true,
     bundle: true,
