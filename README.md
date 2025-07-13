@@ -1,7 +1,7 @@
 # NotExp
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F52OY0N)
 
-[![Get on Addons Mozilla Online](https://extensionworkshop.com/assets/img/documentation/publish/get-the-addon-178x60px.dad84b42.png)](https://addons.mozilla.org/it/firefox/addon/notexp/)
+[![Get on Addons Mozilla Online](https://extensionworkshop.com/assets/img/documentation/publish/get-the-addon-178x60px.dad84b42.png)](https://addons.mozilla.org/en-US/firefox/addon/notexp/)
 [![Get on Chrome Web Store](https://github.com/user-attachments/assets/e52c6e4c-10c5-4723-8a6a-014c042e02ea)](https://chromewebstore.google.com/detail/notexp/lbghdcdjdfngepdkmmemagflaekkmjmf)
 [![Get on Microsoft Edge](assets/get-it-from-MS.png)](https://microsoftedge.microsoft.com/addons/detail/notexp/iajdflbejglpfjcginldhjbfccepabfj)
 
@@ -16,34 +16,35 @@ The difference with the Python script is that the addons works directly inside t
 
 Exporting your note into Xournal++ format can be useful for multiple reason:
 * the web version of OneNote is painfully slow;
-* OneNote doesn't permit you to export PDF (or, it exports your extremely long note sheet into multiple A4), Xournal does;
+* once converted to Xournal++ you can export an high quality PDF, so you can view your notes offline from any device;
 * Xournal++ is open source :D
 
 Please note that there's **no way** to convert back your notes or import them again into OneNote.
 
 # How does it work
-The addons scans the page looking for the images, pen/highlighter strokes and texts.
+This add-on scans the page for images, pen/highlighter strokes, texts and maths blocks.
 
-Once it founds them, it does a best effort conversion from HTML format to Xournal++ XML format.
+Once identified, it attempts to convert them as best as it can from HTML format to a Xournal++ compatible format.
 
-The conversion is completely done by your computer, so no data are collected or sent to external servers.
+The conversion is performed entirely on your computer; no data is collected or sent to external servers.
 
 # How to use
-There are a few steps that are required to get an optimal result:
-* Open the notes that you want to convert
-* Scroll the notes down to the bottom. This step is needed because OneNote loads images and strokes lazily, doing that you force it to download them all.
-* Scroll the notes up again. This is required because the script uses some position relative data to calculate the actual position of the elements.
-* Press the addon button on your Toolbar and click "Export"...
 
-Once the page is converted a "_download_" will start automatically.
+There are a few steps to follow for optimal results:
 
-The time required for the conversion depends on your computer and the size of your notes.
+* Open the notes you want to convert.
+* Scroll to the very end of the notes. This step is necessary because OneNote loads images and strokes gradually, and doing this forces it to download everything.
+* Press the add-on button on the Toolbar, click "Export," and wait.
+
+Once completed, the notes will be saved to your device as a downloaded file.
+
+The time required for conversion will depend on your device's power and the amount of content in your notes.
 
 With a medium size file and a relatively beefy computer it requires no more than a second to export the file, I suppose it should take less than a minute in any other case with some exceptions.
 
 # Development
 
-The plugin is entirely written in TypeScript. It's the first time that I make a browser plugin, so I may have made some mistakes.
+This add-on is entirely written in TypeScript.
 
 To work on the code, you need NPM, then with a terminal
 
@@ -59,18 +60,17 @@ npm install
 
 At this point you are ready to work.
 
-* To build the plugin:
+* To build the add-on:
 ```bash
 npm run build
 ```
+This command creates a "dist" directory containing the reduced JS file and the required assets
 
-This command creates a "dist" directory with the reduced JS file and the assets
-
-* To pack the plugin in a ZIP file:
+* To pack the add-on in a ZIP file:
 ``` bash
 npm run pack
 ```
-This command creates a "web-ext-artifacts" directory with the contents of "dist" zipped, ready to be installed on Firefox.
+This command creates a "web-ext-artifacts" directory containing the content of the "dist" foled zipped, ready to be installed on your browser.
 
 # Translations
 This project has been approved for Hosted Weblate Libre Plan.
