@@ -1,71 +1,74 @@
 {
-  "restrictedPages": {
-    "message": ""
-  },
-  "fileNameLabel": {
-    "message": ""
-  },
-  "emptyNameInfo": {
-    "message": ""
-  },
-  "exportButton": {
-    "message": ""
-  },
-  "progressBarLabel": {
-    "message": ""
-  },
-  "exportOptionsLabel": {
-    "message": ""
-  },
-  "exportStrokesLabel": {
-    "message": ""
-  },
-  "exportImagesLabel": {
-    "message": ""
-  },
-  "exportTextsLabel": {
-    "message": ""
-  },
-  "exportMathLabel": {
-    "message": ""
-  },
-  "exportSeparateLayersLabel": {
-    "message": ""
-  },
-  "mathQualityLabel": {
-    "message": ""
-  },
-  "mathLowQuality": {
-    "message": ""
-  },
-  "mathMediumQuality": {
-    "message": ""
-  },
-  "mathHighQuality": {
-    "message": ""
-  },
-  "pageOptionsLabel": {
-    "message": ""
-  },
-  "exportDarkModeLabel": {
-    "message": ""
-  },
-  "sourceCodeText": {
-    "message": ""
-  },
-  "addonText": {
-    "message": ""
-  },
-  "donateText": {
-    "message": ""
-  },
-  "reportIssueText": {
-    "message": ""
-  },
-  "versionLabel": {
-    "message": ""
-  },
-  "changelogHref": {
-    "message": ""
-  }
+    "restrictedPages": {
+        "message": "Dieses Addon funktioniert nur mit OneNote oder SharePoint Webseiten"
+    },
+    "fileNameLabel": {
+        "message": "Dateiname:"
+    },
+    "emptyNameInfo": {
+        "message": "Wenn leer wird der Name des OneNote Dokument benutzt"
+    },
+    "exportButton": {
+        "message": "Exportieren"
+    },
+    "progressBarLabel": {
+        "message": "Fortschritt:"
+    },
+    "exportOptionsLabel": {
+        "message": "Export-Optionen"
+    },
+    "exportStrokesLabel": {
+        "message": "Striche exportieren"
+    },
+    "exportImagesLabel": {
+        "message": "Bilder exportieren"
+    },
+    "exportTextsLabel": {
+        "message": "Texte exportieren"
+    },
+    "exportMathLabel": {
+        "message": "Mathe Formeln exportieren"
+    },
+    "exportSeparateLayersLabel": {
+        "message": "Als seperate Ebenen exportieren"
+    },
+    "mathQualityLabel": {
+        "message": "Mathe-Formeln Export Qualität"
+    },
+    "mathLowQuality": {
+        "message": "Niedrig"
+    },
+    "mathMediumQuality": {
+        "message": "Mittel"
+    },
+    "mathHighQuality": {
+        "message": "Hoch"
+    },
+    "pageOptionsLabel": {
+        "message": "Seiten-Optionen"
+    },
+    "exportDarkModeLabel": {
+        "message": "Dunkle Seite"
+    },
+    "sourceCodeText": {
+        "message": "Quellcode"
+    },
+    "addonText": {
+        "message": "Addon"
+    },
+    "donateText": {
+        "message": "Spenden"
+    },
+    "reportIssueText": {
+        "message": "Problem melden"
+    },
+    "versionLabel": {
+        "message": "Version:"
+    },
+    "changelogHref": {
+        "message": "Changelog"
+    },
+    "optionsTitle": {
+        "message": "Optionen:"
+    }
 }
