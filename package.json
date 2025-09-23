@@ -13,17 +13,17 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "@mathjax/src": "^4.0.0",
-    "@types/chrome": "^0.1.4",
+    "@types/chrome": "^0.1.12",
     "@types/firefox": "^0.0.34",
-    "@types/web": "^0.0.260",
+    "@types/web": "^0.0.269",
     "@types/webextension-polyfill": "^0.12.3",
-    "esbuild": "^0.25.9",
+    "esbuild": "^0.25.10",
     "html-minifier-terser": "^7.2.0",
     "mathjax": "^4.0.0",
     "mathml-to-latex": "^1.5.0",
     "node-html-parser": "^7.0.1",
     "typescript": "^5.9.2",
-    "web-ext": "8.9.0",
+    "web-ext": "8.10.0",
     "webextension-polyfill": "^0.12.0"
   }
 }
