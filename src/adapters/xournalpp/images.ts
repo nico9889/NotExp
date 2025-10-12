@@ -1,17 +1,18 @@
 import {Image} from "../../xournalpp/image";
-import {LOG, Offsets, PageSize} from "../converter";
+import {LOG} from "../converter";
 import {Layer} from "../../xournalpp/page";
+import {Offsets, PageSize} from "./xournalpp-adapter";
 
 export const IMAGE_BASE64_REGEXP = new RegExp("data:image/.*;base64,");
 
 
-export function convertImages(layer: Layer, offsets: Offsets, page_size: PageSize, zoom_level: number) {
+export function convertImages(panel: HTMLDivElement, layer: Layer, offsets: Offsets, page_size: PageSize, zoom_level: number) {
     LOG.info("Converting images");
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
     const converted_images: Image[] = [];
-    const image_containers = document.getElementsByClassName("WACImageContainer") as HTMLCollectionOf<HTMLDivElement>;
+    const image_containers = panel.getElementsByClassName("WACImageContainer") as HTMLCollectionOf<HTMLDivElement>;
     LOG.info(`Found ${image_containers.length} image(s)`);
     for (const container of image_containers) {
         // OneNote uses (at least?) two type of positioning method for the images:

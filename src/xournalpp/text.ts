@@ -9,8 +9,8 @@ export class Text extends Element {
         x: number = 0,
         y: number = 0,
         color: RGBAColor | Color = new RGBAColor(0, 0, 0),
-        ts: number = 0,
-        fn: string = "",
+        // ts: number = 0,
+        // fn: string = "",
     ) {
         super(document, "text");
         if (!(color instanceof RGBAColor)) {

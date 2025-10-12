@@ -1,4 +1,5 @@
-import {COLOR_REGEXP, LOG, Offsets, PageSize} from "../converter";
+import {COLOR_REGEXP, LOG} from "../converter";
+import {Offsets, PageSize} from "./xournalpp-adapter";
 import {Color, RGBAColor} from "../../xournalpp/utils";
 import {Layer} from "../../xournalpp/page";
 
@@ -94,10 +95,10 @@ function processParagraph(layer: Layer, paragraph: HTMLParagraphElement,
 }
 
 
-export function convertTexts(layer: Layer, offsets: Offsets, dark_mode: boolean, page_size: PageSize, zoom_level: number) {
+export function convertTexts(panel: HTMLDivElement, layer: Layer, offsets: Offsets, dark_mode: boolean, page_size: PageSize, zoom_level: number) {
     LOG.info("Converting texts");
 
-    const paragraphs = document.getElementsByClassName("Paragraph") as HTMLCollectionOf<HTMLParagraphElement>;
+    const paragraphs = panel.getElementsByClassName("Paragraph") as HTMLCollectionOf<HTMLParagraphElement>;
 
     for (const paragraph of paragraphs) {
         try {

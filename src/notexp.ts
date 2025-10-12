@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
-import {Status, LogLine, COLORS} from "./log/log";
-import {ConvertMessage, ProgressMessage, Status as ProgressStatus} from "./messages/convert";
+import {COLORS, LogLine, Status} from "./log/log";
+import {ConvertMessage, DocumentFormat, ProgressMessage, Status as ProgressStatus} from "./messages/convert";
 import {Message} from "./messages";
 
 document.querySelectorAll<HTMLElement>('[nex-i18n]').forEach((el) => {
@@ -240,6 +240,7 @@ exportButton?.addEventListener('click', async () => {
     const tab = (await browser.tabs.query({active: true, currentWindow: true}))[0];
     try {
         const message: ConvertMessage = {
+            format: DocumentFormat.xopp,
             dark_page: exportDarkMode?.checked ?? false,
             strokes_dark_mode: exportDarkMode?.checked ?? false,
             texts_dark_mode: exportDarkMode?.checked ?? false,

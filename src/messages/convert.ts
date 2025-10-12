@@ -6,7 +6,14 @@ export enum MathQuality{
     High=4
 }
 
+export enum DocumentFormat{
+    xopp = "Xournal++ (XOPP)",
+    xoz = "Xournal++ (XOZ)", // TODO: https://codeberg.org/nico9889/OneNote2Xournalpp
+    rnote = "RNote" // Just an idea, implementation not planned
+}
+
 export interface ConvertMessage extends Message {
+    format: DocumentFormat,
     filename: string,
     images: boolean,
     texts: boolean,

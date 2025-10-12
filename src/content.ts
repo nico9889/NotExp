@@ -1,8 +1,7 @@
 import browser from "webextension-polyfill";
-import {convertNote, downloadDocument} from "./converter/converter";
+import {convertNote} from "./adapters/converter";
 import {Message} from "./messages";
 import {ConvertMessage} from "./messages/convert";
-import {progressTracker} from "./converter/progress";
 
 /* TODO
 interface LogEnableMessage extends Message {
@@ -19,10 +18,9 @@ browser.runtime.onMessage.addListener(async (msg) => {
     if (message.message === 'convert') {
         try {
             const document = await convertNote(message as ConvertMessage);
-            downloadDocument(document);
+            await document.download();
         } catch (e) {
             console.error(e);
-            await progressTracker.error();
         }
     }
     /* TODO

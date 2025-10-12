@@ -1,12 +1,13 @@
 import {Stroke, Tool} from "../../xournalpp/stroke";
 import {Color, RGBAColor} from "../../xournalpp/utils";
-import {COLOR_REGEXP, LOG, PageSize} from "../converter";
+import {COLOR_REGEXP, LOG} from "../converter";
+import {PageSize} from "./xournalpp-adapter";
 import {Layer} from "../../xournalpp/page";
 
-export function convertStrokes(layer: Layer, dark_mode: boolean, page_size: PageSize, zoom_level: number): Stroke[] {
+export function convertStrokes(panel: HTMLDivElement, layer: Layer, dark_mode: boolean, page_size: PageSize): Stroke[] {
     LOG.info("Converting strokes");
     const converted_strokes: Stroke[] = [];
-    const strokes = document.getElementsByClassName("InkStrokeOuterElement") as HTMLCollectionOf<SVGElement>;
+    const strokes = panel.getElementsByClassName("InkStrokeOuterElement") as HTMLCollectionOf<SVGElement>;
     LOG.info(`Found ${strokes.length} stroke(s)`);
     const base_color = (dark_mode) ? Color.White : Color.Black;
 

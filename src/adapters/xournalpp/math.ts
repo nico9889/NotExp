@@ -1,7 +1,8 @@
 import {MathQuality} from "../../messages/convert";
 import {TexImage} from "../../xournalpp/teximage";
 import {MathMLToLaTeX} from "mathml-to-latex";
-import {LOG, Offsets, PageSize} from "../converter";
+import {LOG} from "../converter";
+import {Offsets, PageSize} from "./xournalpp-adapter";
 import {IMAGE_BASE64_REGEXP} from "./images";
 import {mathjax} from '@mathjax/src/mjs/mathjax.js';
 import {browserAdaptor} from "@mathjax/src/mjs/adaptors/browserAdaptor.js";
@@ -21,12 +22,12 @@ function sanitize_latex(latex: string): string{
 const adaptor = browserAdaptor();
 RegisterHTMLHandler(adaptor);
 
-export async function convertMathMLBlocks(layer: Layer, offsets: Offsets, math_dark_mode: boolean, math_quality: MathQuality, page_size: PageSize, zoom_level: number) {
+export async function convertMathMLBlocks(panel: HTMLDivElement, layer: Layer, offsets: Offsets, math_dark_mode: boolean, math_quality: MathQuality, page_size: PageSize, zoom_level: number) {
     LOG.info("Converting MathML blocks");
     const converted_blocks: TexImage[] = [] // Empty output array
 
     // Getting math blocks from OneNote page
-    const math_containers = document.getElementsByClassName("MathSpan") as HTMLCollectionOf<HTMLSpanElement>;
+    const math_containers = panel.getElementsByClassName("MathSpan") as HTMLCollectionOf<HTMLSpanElement>;
     LOG.info(`Found ${math_containers.length} MathML block(s)`);
 
     // Preparing canvas for image conversion

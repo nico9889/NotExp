@@ -1,7 +1,7 @@
 import browser from "webextension-polyfill";
 import {ProgressMessage, Status} from "../messages/convert";
 
-class ProgressTracker {
+export class ProgressTracker {
     private currentStep = 0;
 
     constructor(private readonly steps: number = 1) {
@@ -36,6 +36,3 @@ class ProgressTracker {
         await this.updateProgressBar(Status.Error);
     }
 }
-
-// 1) texts, 2) images, 3) strokes, 4) math, 5) XML, 6) GZip
-export const progressTracker = new ProgressTracker(6);
