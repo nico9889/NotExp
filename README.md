@@ -10,6 +10,15 @@
 
 This is an addon for browser that permits to convert OneNote notes into Xournal++ XOPP format.
 
+# Mirrors
+This project has been migrated to Codeberg as GitHub is becoming more and more bloated over time, especially in the recent days with the introduction of the AI ​​features and it no longer feels like a good "homebase" for my projects anymore to me.
+
+You can find a mirror this project source code in the following places:
+| Platform | URL                                |
+| ---------| ---------------------------------- |
+| GitHub   | https://github.com/nico9889/NotExp |
+
+
 # Motivation
 This is an evolution of my [old Python script](https://github.com/nico9889/OneNote2Xournalpp) that did more or less the same thing.
 The difference with the Python script is that the addons works directly inside the browser so it can retrieve more data useful (mainly offsets between elements once rendered) to the conversion.
