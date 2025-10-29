@@ -1,6 +1,6 @@
 import * as esbuild from 'esbuild'
 import * as fs from 'fs';
-import {minify} from "html-minifier-terser";
+import {minify} from "html-minifier-next";
 import {parse} from "node-html-parser";
 
 // Parsing HTML file to populate _locales files
