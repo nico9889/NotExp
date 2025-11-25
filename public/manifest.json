@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "NotExp",
-  "description": "This addon converts OneNote notes to Xournal++ notes.",
+  "description": "This addon converts OneNote notes to Xournal++ or RNote notes.",
   "default_locale": "en",
   "version": "2.0.0",
   "author": "nico9889",
