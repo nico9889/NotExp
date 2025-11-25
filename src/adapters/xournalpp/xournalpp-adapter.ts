@@ -64,35 +64,46 @@ export class XournalppAdapter extends OneNoteAdapter {
         let layer = page.addLayer();
         const separateLayers = this.options.separateLayers;
         const offsets = this.offsets;
-        if (separateLayers) {
-            layer.name = "Texts"
-        } else {
-            layer.name = "All elements";
+
+        if(this.options.texts){
+            if (separateLayers) {
+                layer.name = "Texts"
+            } else {
+                layer.name = "All elements";
+            }
+            convertTexts(this.panel, layer, offsets, this.options.texts_dark_mode, this.pageSize, this.zoomLevel);
         }
-        convertTexts(this.panel, layer, offsets, this.options.texts_dark_mode, this.pageSize, this.zoomLevel);
         await this.progressTracker.bump();
 
-        if (separateLayers) {
-            layer = page.addLayer();
-            layer.name = "Images";
+
+        if (this.options.images) {
+            if (separateLayers) {
+                layer = page.addLayer();
+                layer.name = "Images";
+            }
+            convertImages(this.panel, layer, offsets, this.pageSize, this.zoomLevel);
         }
-        convertImages(this.panel, layer, offsets, this.pageSize, this.zoomLevel);
         await this.progressTracker.bump();
 
-        if (separateLayers) {
-            layer = page.addLayer();
-            layer.name = "Strokes";
+        if (this.options.strokes) {
+            if (separateLayers) {
+                layer = page.addLayer();
+                layer.name = "Strokes";
+            }
+            convertStrokes(this.panel, layer, this.options.strokes_dark_mode, this.pageSize);
         }
-        convertStrokes(this.panel, layer, this.options.strokes_dark_mode, this.pageSize);
         await this.progressTracker.bump();
 
-        if (separateLayers) {
-            layer = page.addLayer();
-            layer.name = "Math";
+        if(this.options.maths){
+            if (separateLayers) {
+                layer = page.addLayer();
+                layer.name = "Math";
+            }
+            await convertMathMLBlocks(this.panel, layer, offsets, this.options.math_dark_mode, this.options.math_quality,
+                this.pageSize, this.zoomLevel);
         }
-        await convertMathMLBlocks(this.panel, layer, offsets, this.options.math_dark_mode, this.options.math_quality,
-            this.pageSize, this.zoomLevel);
         await this.progressTracker.bump();
+
         page.width = this.pageSize.width + 5;
         page.height = this.pageSize.height + 5;
         // Trimming empty layers

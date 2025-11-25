@@ -70,21 +70,27 @@ export class RNoteAdapter extends OneNoteAdapter {
 
         const page_color = (this.options.dark_page) ? Colors.Black : Colors.White;
         this.document.set_background_color(page_color);
-        const separateLayers = this.options.separateLayers;
         const offsets = this.offsets;
 
-        converted_strokes.push(...convertTexts(this.panel, this.document, offsets, this.options.texts_dark_mode, this.pageSize, this.zoomLevel));
+        if(this.options.texts) {
+            converted_strokes.push(...convertTexts(this.panel, this.document, offsets, this.options.texts_dark_mode, this.pageSize, this.zoomLevel));
+        }
         await this.progressTracker.bump();
 
-        converted_strokes.push(...convertImages(this.panel, this.document, offsets, this.pageSize, this.zoomLevel));
+        if(this.options.images) {
+            converted_strokes.push(...convertImages(this.panel, this.document, offsets, this.pageSize, this.zoomLevel));
+        }
         await this.progressTracker.bump();
 
-        converted_strokes.push(...convertStrokes(this.panel, this.document, this.options.strokes_dark_mode, this.pageSize));
-
+        if(this.options.strokes){
+            converted_strokes.push(...convertStrokes(this.panel, this.document, this.options.strokes_dark_mode, this.pageSize));
+        }
         await this.progressTracker.bump();
 
-        converted_strokes.push(...await convertMathMLBlocks(this.panel, this.document, offsets, this.options.math_dark_mode, this.options.math_quality,
-            this.pageSize, this.zoomLevel));
+        if(this.options.maths){
+            converted_strokes.push(...await convertMathMLBlocks(this.panel, this.document, offsets, this.options.math_dark_mode, this.options.math_quality,
+                this.pageSize, this.zoomLevel));
+        }
         await this.progressTracker.bump();
         const width = this.pageSize.width + 5;
         const height = this.pageSize.height + 5;
