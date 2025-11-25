@@ -16,11 +16,11 @@ root.querySelectorAll('[nex-i18n]').forEach(el => {
 });
 
 // Populate translations file with missing keys to help translators
-function populate_translations(lang_code){
+function populate_translations(lang_code) {
     let file;
-    try{
+    try {
         file = fs.readFileSync(`./_locales/${lang_code}/messages.json`, {encoding: "utf8"});
-    }catch (e){
+    } catch (e) {
         file = {};
     }
 
@@ -28,35 +28,43 @@ function populate_translations(lang_code){
     const missing_keys = [];
 
     let translations = {};
-    try{
+    try {
         translations = JSON.parse(file);
-    }catch(e) {
+    } catch (e) {
 
     }
+
+    // Workaround to fix corrupted translations
+    delete translations[""];
+
     // If the language is not english, populate with an empty string.
     // The empty string should be useful for translators as an indication that the translation is missing.
     // Empty strings will be removed later so the browser will fall back to the default language.
     if (lang_code !== 'en') {
         default_translation.forEach((_, key) => {
-            if(translations[key] === undefined){
+            if (!key) {
+                console.warn(`Deleting empty key from ${lang_code}`);
+                delete translations[key];
+            } else if (translations[key] === undefined) {
                 translations[key] = {message: ""};
                 missing_keys.push(key);
-            }else if(!translations[key]["message"]){
+            } else if (!translations[key]["message"]) {
                 missing_keys.push(key);
             }
         });
-        if(missing_keys.length > 0){
+        if (missing_keys.length > 0) {
             console.error(`Language ${lang_code} has missing translation for keys:`, missing_keys.join(", "));
         }
     }
     // If the language is english (the default language) then try to populate with default texts from HTML
-    else{
+    else {
         default_translation.forEach((value, key) => {
             // Set the value equal to the HTML text trimmed, with multiple spaces collapsed to one
             translations[key] = {message: value.trim().replace(/\s+/g, ' ')};
             missing_keys.push(key);
         })
-        if(missing_keys.length > 0){
+
+        if (missing_keys.length > 0) {
             console.error(`Automatically populated strings for ${lang_code}. Keys: `, missing_keys.join(", "));
         }
     }
@@ -65,10 +73,10 @@ function populate_translations(lang_code){
 
 // Load each language folder and tries to populate the message.json with missing strings
 fs.readdirSync('./_locales/').forEach(lang_code => {
-    try{
+    try {
         // Tests if the folder is a symlink
         fs.readlinkSync(`./_locales/${lang_code}/`);
-    }catch(e){
+    } catch (e) {
         populate_translations(lang_code);
     }
 });
@@ -119,7 +127,7 @@ files.filter(file => !exclude_files.includes(file)).forEach(file => {
 });
 
 // Create locales folder
-if(!fs.existsSync(`./dist/_locales/`)) {
+if (!fs.existsSync(`./dist/_locales/`)) {
     fs.mkdirSync(`./dist/_locales/`);
 }
 
@@ -127,12 +135,15 @@ if(!fs.existsSync(`./dist/_locales/`)) {
 fs.readdirSync('./_locales/').forEach(lang_code => {
     const file = fs.readFileSync(`./_locales/${lang_code}/messages.json`, {encoding: "utf8"});
     const translations = JSON.parse(file);
-    for(const key in translations) {
-        if(translations[key]["message"] === ""){
+    for (const key in translations) {
+        if (translations[key]["message"] === "") {
             translations[key] = undefined;
         }
+        if (!key) {
+            delete translations[key];
+        }
     }
-    if(!fs.existsSync(`./dist/_locales/${lang_code}`)) {
+    if (!fs.existsSync(`./dist/_locales/${lang_code}`)) {
         fs.mkdirSync(`./dist/_locales/${lang_code}`);
     }
     fs.writeFileSync(`./dist/_locales/${lang_code}/messages.json`, JSON.stringify(translations));
