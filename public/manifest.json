@@ -3,7 +3,7 @@
   "name": "NotExp",
   "description": "This addon converts OneNote notes to Xournal++ or RNote notes.",
   "default_locale": "en",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": "nico9889",
   "homepage_url": "https://github.com/nico9889/NotExp",
   "permissions": [
