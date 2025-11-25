@@ -1,6 +1,6 @@
 {
   "name": "notexp-addon",
-  "version": "1.9.7",
+  "version": "2.0.0",
   "description": "One-click browser addon to export online notes to Xournal++ compatible format",
   "type": "module",
   "scripts": {
