@@ -2,7 +2,8 @@ import browser from "webextension-polyfill";
 import {COLORS, LogLine, Status} from "./log/log";
 import {
     ConvertMessage,
-    DocumentFormat, formatToString,
+    DocumentFormat,
+    formatToString,
     implementedFormats,
     ProgressMessage,
     Status as ProgressStatus

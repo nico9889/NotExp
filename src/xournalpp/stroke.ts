@@ -1,4 +1,4 @@
-import {Color, RGBAColor, Element} from "./utils";
+import {Color, Element, RGBAColor} from "./utils";
 
 export enum Tool {
     Pen = "pen",

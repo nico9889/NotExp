@@ -1,7 +1,7 @@
 import {Image} from "./image";
 import {Text} from "./text";
 import {Stroke} from "./stroke";
-import {Element, Color, RGBAColor} from "./utils";
+import {Color, Element, RGBAColor} from "./utils";
 import {TexImage} from "./teximage";
 
 export enum BackgroundType {

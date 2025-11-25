@@ -1,4 +1,4 @@
-import {Color, RGBAColor, Element} from "./utils";
+import {Color, Element, RGBAColor} from "./utils";
 
 export class Text extends Element {
     constructor(
