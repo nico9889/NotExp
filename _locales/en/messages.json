@@ -30,7 +30,7 @@
     "message": "Export in separate layers"
   },
   "exportDarkModeLabel": {
-    "message": "Dark page"
+    "message": "Dark mode"
   },
   "sourceCodeText": {
     "message": "Source code"
@@ -45,7 +45,7 @@
     "message": "Report an issue"
   },
   "mathQualityLabel": {
-    "message": "Math export quality"
+    "message": "Math Export Quality"
   },
   "mathLowQuality": {
     "message": "Low"
@@ -70,5 +70,11 @@
   },
   "progressBarLabel": {
     "message": "Progress:"
+  },
+  "": {
+    "message": "Format:"
+  },
+  "fileFormatLabel": {
+    "message": "Format:"
   }
 }

@@ -3,6 +3,7 @@ import {ConvertMessage, DocumentFormat} from "../messages/convert";
 import {OneNoteAdapter} from "./onenote";
 import {XournalppAdapter} from "./xournalpp/xournalpp-adapter";
 import {DownloadableDocument} from "../models/document";
+import {RNoteAdapter} from "./rnote/rnote-adapter";
 
 
 export const COLOR_REGEXP = new RegExp("rgb\\(([0-9]{1,3}), ?([0-9]{1,3}), ?([0-9]{1,3})\\)");
@@ -14,8 +15,9 @@ function buildAdapter(options: ConvertMessage, panel: HTMLDivElement): OneNoteAd
     switch (options.format) {
         case DocumentFormat.xopp:
             return new XournalppAdapter(options, panel);
-        case DocumentFormat.xoz:
         case DocumentFormat.rnote:
+            return new RNoteAdapter(options, panel);
+        case DocumentFormat.xoz:
         default:
             throw Error("Not implemented");
     }

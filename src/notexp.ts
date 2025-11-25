@@ -1,6 +1,12 @@
 import browser from "webextension-polyfill";
 import {COLORS, LogLine, Status} from "./log/log";
-import {ConvertMessage, DocumentFormat, ProgressMessage, Status as ProgressStatus} from "./messages/convert";
+import {
+    ConvertMessage,
+    DocumentFormat, formatToString,
+    implementedFormats,
+    ProgressMessage,
+    Status as ProgressStatus
+} from "./messages/convert";
 import {Message} from "./messages";
 
 document.querySelectorAll<HTMLElement>('[nex-i18n]').forEach((el) => {
@@ -25,6 +31,14 @@ const exportDarkMode: HTMLInputElement = document.getElementById("exportDarkMode
 const container: HTMLInputElement = document.getElementById('container') as HTMLInputElement;
 const mathQuality: HTMLSelectElement = document.getElementById("mathQuality") as HTMLSelectElement;
 const semanticVersion: HTMLSpanElement = document.getElementById("semanticVersion") as HTMLSpanElement;
+const formatSelector: HTMLSelectElement = document.getElementById("formatSelector") as HTMLSelectElement;
+
+for(const format of implementedFormats){
+    const option = document.createElement("option");
+    option.value = format.toString();
+    option.textContent = formatToString(format);
+    formatSelector.appendChild(option);
+}
 
 /* TODO
 const log = document.getElementById('log');
@@ -47,7 +61,8 @@ type SettingsKeys =
     | "export_strokes_dark_mode"
     | "export_maths_dark_mode"
     | "export_texts_dark_mode"
-    | "math_export_quality";
+    | "math_export_quality"
+    | "file_format";
 
 let settings: Settings = {
     export_images: exportImages?.checked || true,
@@ -59,7 +74,8 @@ let settings: Settings = {
     export_strokes_dark_mode: exportDarkMode?.checked || false,
     export_maths_dark_mode: exportDarkMode?.checked || false,
     export_texts_dark_mode: exportDarkMode?.checked || false,
-    math_export_quality: 2
+    math_export_quality: 2,
+    file_format: 0
 };
 
 
@@ -104,6 +120,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     exportSeparateLayers.checked = Boolean(settings.export_separate_layers);
     exportDarkMode.checked = Boolean(settings.export_dark_page);
     mathQuality.value = String(settings.math_export_quality);
+    formatSelector.value = String(settings.file_format || 0);
 
     /* TODO
     const item = await browser.storage.local.get(['o2x-log-debug', 'o2x-log-show']);
@@ -146,6 +163,7 @@ setUpdateSettingsListener(exportDarkMode, "export_dark_page");
 setUpdateSettingsListener(exportDarkMode, "export_strokes_dark_mode");
 setUpdateSettingsListener(exportDarkMode, "export_texts_dark_mode");
 setUpdateSettingsSelectListener(mathQuality, "math_export_quality");
+setUpdateSettingsSelectListener(formatSelector, "file_format");
 
 
 /* TODO
@@ -240,7 +258,8 @@ exportButton?.addEventListener('click', async () => {
     const tab = (await browser.tabs.query({active: true, currentWindow: true}))[0];
     try {
         const message: ConvertMessage = {
-            format: DocumentFormat.xopp,
+            // @ts-ignore
+            format: Number(formatSelector.value) ?? DocumentFormat.xopp,
             dark_page: exportDarkMode?.checked ?? false,
             strokes_dark_mode: exportDarkMode?.checked ?? false,
             texts_dark_mode: exportDarkMode?.checked ?? false,

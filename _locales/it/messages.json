@@ -1,74 +1,74 @@
 {
   "restrictedPages": {
-    "message": "Questa estensione funziona solo su pagine OneNote o SharePoint"
+    "message": ""
   },
   "fileNameLabel": {
-    "message": "Nome file:"
+    "message": ""
   },
   "emptyNameInfo": {
-    "message": "Se vuoto usa il nome del documento OneNote"
+    "message": ""
+  },
+  "": {
+    "message": ""
   },
   "exportButton": {
-    "message": "Esporta"
-  },
-  "optionsTitle": {
-    "message": "Opzioni:"
-  },
-  "exportStrokesLabel": {
-    "message": "Esporta tratti"
-  },
-  "exportImagesLabel": {
-    "message": "Esporta immagini"
-  },
-  "exportTextsLabel": {
-    "message": "Esporta testi"
-  },
-  "exportMathLabel": {
-    "message": "Esporta matematica"
-  },
-  "exportSeparateLayersLabel": {
-    "message": "Esporta in layer separati"
-  },
-  "exportDarkModeLabel": {
-    "message": "Pagina scura"
-  },
-  "sourceCodeText": {
-    "message": "Codice sorgente"
-  },
-  "addonText": {
-    "message": "Estensione"
-  },
-  "donateText": {
-    "message": "Dona"
-  },
-  "reportIssueText": {
-    "message": "Segnala un problema"
-  },
-  "mathQualityLabel": {
-    "message": "Qualità esport. matematica"
-  },
-  "mathLowQuality": {
-    "message": "Bassa"
-  },
-  "mathMediumQuality": {
-    "message": "Media"
-  },
-  "mathHighQuality": {
-    "message": "Alta"
-  },
-  "versionLabel": {
-    "message": "Versione:"
-  },
-  "changelogHref": {
-    "message": "Cambiamenti"
-  },
-  "exportOptionsLabel": {
-    "message": "Opzioni esportazione"
-  },
-  "pageOptionsLabel": {
-    "message": "Opzioni pagina"
+    "message": ""
   },
   "progressBarLabel": {
-    "message": "Progresso:"
+    "message": ""
+  },
+  "exportOptionsLabel": {
+    "message": ""
+  },
+  "exportStrokesLabel": {
+    "message": ""
+  },
+  "exportImagesLabel": {
+    "message": ""
+  },
+  "exportTextsLabel": {
+    "message": ""
+  },
+  "exportMathLabel": {
+    "message": ""
+  },
+  "exportSeparateLayersLabel": {
+    "message": ""
+  },
+  "mathQualityLabel": {
+    "message": ""
+  },
+  "mathLowQuality": {
+    "message": ""
+  },
+  "mathMediumQuality": {
+    "message": ""
+  },
+  "mathHighQuality": {
+    "message": ""
+  },
+  "pageOptionsLabel": {
+    "message": ""
+  },
+  "exportDarkModeLabel": {
+    "message": ""
+  },
+  "sourceCodeText": {
+    "message": ""
+  },
+  "donateText": {
+    "message": ""
+  },
+  "reportIssueText": {
+    "message": ""
+  },
+  "versionLabel": {
+    "message": ""
+  },
+  "changelogHref": {
+    "message": ""
+  },
+  "fileFormatLabel": {
+    "message": "Formato:"
   }
 }

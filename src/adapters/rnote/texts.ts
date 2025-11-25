@@ -1,7 +1,9 @@
 import {COLOR_REGEXP, LOG} from "../converter";
-import {Offsets, PageSize} from "./xournalpp-adapter";
-import {Color, RGBAColor} from "../../xournalpp/utils";
-import {Layer} from "../../xournalpp/page";
+import {File} from "../../rnote/file";
+import {RGB, Colors, round3} from "../../rnote/utils";
+import {Offsets, PageSize} from "./rnote-adapter";
+import {TextStroke} from "../../rnote/text";
+import {StrokeComponent} from "../../rnote/stroke";
 
 
 // Original idea: https://www.youtube.com/watch?v=kuGA8a_W4s4
@@ -25,10 +27,10 @@ function splitWrappedText(text: HTMLElement): string[] {
 }
 
 
-function processParagraph(layer: Layer, paragraph: HTMLParagraphElement,
+function processParagraph(file: File, paragraph: HTMLParagraphElement,
                           offsets: Offsets, dark_mode: boolean, page_size: PageSize, zoom_level: number) {
     const texts = paragraph.getElementsByClassName("TextRun") as HTMLCollectionOf<HTMLSpanElement>;
-
+    const converted_texts: StrokeComponent[] = []
     for (const text of texts) {
         if (text.children[0]?.innerHTML) {
             const textColor = window.getComputedStyle(text).getPropertyValue("color");
@@ -40,12 +42,17 @@ function processParagraph(layer: Layer, paragraph: HTMLParagraphElement,
                 console.debug(`NEX: error while matching color from ${textColor}`, e);
             }
 
-            let color = RGBAColor.fromColor(Color.Black);
+            let color: RGB = Colors.Black;
 
             if (dark_mode && r === "0" && g === "0" && b === "0") {
-                color = RGBAColor.fromColor(Color.White);
+                color = Colors.White;
             } else {
-                color = new RGBAColor(Number(r), Number(g), Number(b));
+                color = {
+                    r: round3(Number(r) / 255),
+                    g: round3(Number(g) / 255),
+                    b: round3(Number(b) / 255),
+                    a: 1
+                }
             }
 
             const fontFamily = getComputedStyle(text).getPropertyValue("font-family");
@@ -66,43 +73,62 @@ function processParagraph(layer: Layer, paragraph: HTMLParagraphElement,
                         const line = lines[index];
                         const rect = textBoundaries[index];
 
-                        const converted_text = layer.addText();
-                        converted_text.size = fontSize;
-                        converted_text.data = line;
-                        if (color)
-                            converted_text.color = color;
-
-                        // The quote replacement is necessary only in Chrome
-                        converted_text.font = font.replace(/"/g, "").trim();
                         const x = (rect.x - offsets.x) / zoom_level;
                         const y = (rect.y - offsets.y) / zoom_level;
-                        converted_text.x = x;
-                        converted_text.y = y;
-
                         const text_width = rect.width / zoom_level;
                         // Inelegant solution to export texts max_width and max_height by side effect without
                         // scanning multiple times all the texts
                         page_size.width = Math.max(page_size.width, x + text_width);
                         page_size.height = Math.max(page_size.height, y + (rect.height / zoom_level));
+
+                        const text_stroke: TextStroke = {
+                            text: line, text_style: {
+                                // The quote replacement is necessary only in Chrome
+                                font_family: font.replace(/"/g, "").trim(),
+                                font_size: fontSize,
+                                font_weight: 100,
+                                font_style: "regular",
+                                color: color,
+                                // FIXME: for some reason the text box isn't large enough, probably this happens because
+                                //   of font incompatibility.
+                                //   The * 1.23 is arbitrary and has been added as a workaround and it should be removed
+                                //   in the future.
+                                max_width: round3(text_width * 1.23),
+                                alignment: "start",
+                                ranged_text_attributes: []
+                            }, transform: {
+                                affine: [1, 0, 0, 0, 1, 0, x, y - (rect.height/2), 1]
+                            }
+                        }
+                        file.new_chrono(0);
+                        converted_texts.push({
+                            value: {
+                                bitmapimage: undefined,
+                                textstroke: text_stroke,
+                                brushstroke: undefined
+                            }, version: 1
+                        });
                     }
 
                 }
             }
         }
     }
+    return converted_texts;
 }
 
 
-export function convertTexts(panel: HTMLDivElement, layer: Layer, offsets: Offsets, dark_mode: boolean, page_size: PageSize, zoom_level: number) {
+export function convertTexts(panel: HTMLDivElement, file: File, offsets: Offsets, dark_mode: boolean, page_size: PageSize, zoom_level: number) {
     LOG.info("Converting texts");
 
     const paragraphs = panel.getElementsByClassName("Paragraph") as HTMLCollectionOf<HTMLParagraphElement>;
-
+    const converted_texts: StrokeComponent[] = [];
     for (const paragraph of paragraphs) {
         try {
-            processParagraph(layer, paragraph, offsets, dark_mode, page_size, zoom_level);
+            converted_texts.push(...processParagraph(file, paragraph, offsets, dark_mode, page_size, zoom_level));
         } catch (e) {
             LOG.error(`An error occurred while exporting a text paragraph: ${e}`)
         }
     }
+    return converted_texts;
 }

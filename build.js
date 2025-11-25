@@ -52,11 +52,9 @@ function populate_translations(lang_code){
     // If the language is english (the default language) then try to populate with default texts from HTML
     else{
         default_translation.forEach((value, key) => {
-            if(translations[key] === undefined){
-                // Set the value equal to the HTML text trimmed, with multiple spaces collapsed to one
-                translations[key] = {message: value.trim().replace(/\s+/g, ' ')};
-                missing_keys.push(key);
-            }
+            // Set the value equal to the HTML text trimmed, with multiple spaces collapsed to one
+            translations[key] = {message: value.trim().replace(/\s+/g, ' ')};
+            missing_keys.push(key);
         })
         if(missing_keys.length > 0){
             console.error(`Automatically populated strings for ${lang_code}. Keys: `, missing_keys.join(", "));

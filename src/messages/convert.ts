@@ -1,16 +1,29 @@
 import {Message} from "./index";
 
-export enum MathQuality{
-    Low=1,
-    Medium=2,
-    High=4
+export enum MathQuality {
+    Low = 1,
+    Medium = 2,
+    High = 4
 }
 
-export enum DocumentFormat{
-    xopp = "Xournal++ (XOPP)",
-    xoz = "Xournal++ (XOZ)", // TODO: https://codeberg.org/nico9889/OneNote2Xournalpp
-    rnote = "RNote" // Just an idea, implementation not planned
+export enum DocumentFormat {
+    xopp = 0,
+    xoz = 1, // TODO: https://codeberg.org/nico9889/OneNote2Xournalpp
+    rnote = 10
 }
+
+export function formatToString(format: DocumentFormat){
+    switch(format){
+        case DocumentFormat.xopp:
+            return "Xournal++ (.xopp)";
+        case DocumentFormat.xoz:
+            return "Xournal++ (.xoz)";
+        case DocumentFormat.rnote:
+            return "RNote (.rnote)";
+    }
+}
+
+export const implementedFormats = [DocumentFormat.xopp, DocumentFormat.rnote];
 
 export interface ConvertMessage extends Message {
     format: DocumentFormat,
@@ -27,7 +40,7 @@ export interface ConvertMessage extends Message {
     math_quality: MathQuality
 }
 
-export enum Status{
+export enum Status {
     Ok = 0,
     Error = 1
 }
