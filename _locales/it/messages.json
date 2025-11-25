@@ -1,69 +1,75 @@
 {
   "restrictedPages": {
-    "message": ""
+    "message": "Questa estensione funziona solo su pagine OneNote o SharePoint"
   },
   "fileNameLabel": {
-    "message": ""
+    "message": "Nome file:"
   },
   "emptyNameInfo": {
-    "message": ""
+    "message": "Se vuoto usa il nome del documento OneNote"
   },
   "exportButton": {
-    "message": ""
+    "message": "Esporta"
   },
-  "progressBarLabel": {
-    "message": ""
-  },
-  "exportOptionsLabel": {
-    "message": ""
+  "optionsTitle": {
+    "message": "Opzioni:"
   },
   "exportStrokesLabel": {
-    "message": ""
+    "message": "Esporta tratti"
   },
   "exportImagesLabel": {
-    "message": ""
+    "message": "Esporta immagini"
   },
   "exportTextsLabel": {
-    "message": ""
+    "message": "Esporta testi"
   },
   "exportMathLabel": {
-    "message": ""
+    "message": "Esporta matematica"
   },
   "exportSeparateLayersLabel": {
-    "message": ""
-  },
-  "mathQualityLabel": {
-    "message": ""
-  },
-  "mathLowQuality": {
-    "message": ""
-  },
-  "mathMediumQuality": {
-    "message": ""
-  },
-  "mathHighQuality": {
-    "message": ""
-  },
-  "pageOptionsLabel": {
-    "message": ""
+    "message": "Esporta in layer separati"
   },
   "exportDarkModeLabel": {
-    "message": ""
+    "message": "Pagina scura"
   },
   "sourceCodeText": {
-    "message": ""
+    "message": "Codice sorgente"
+  },
+  "addonText": {
+    "message": "Estensione"
   },
   "donateText": {
-    "message": ""
+    "message": "Dona"
   },
   "reportIssueText": {
-    "message": ""
+    "message": "Segnala un problema"
+  },
+  "mathQualityLabel": {
+    "message": "Qualità esport. matematica"
+  },
+  "mathLowQuality": {
+    "message": "Bassa"
+  },
+  "mathMediumQuality": {
+    "message": "Media"
+  },
+  "mathHighQuality": {
+    "message": "Alta"
   },
   "versionLabel": {
-    "message": ""
+    "message": "Versione:"
   },
   "changelogHref": {
-    "message": ""
+    "message": "Cambiamenti"
+  },
+  "exportOptionsLabel": {
+    "message": "Opzioni esportazione"
+  },
+  "pageOptionsLabel": {
+    "message": "Opzioni pagina"
+  },
+  "progressBarLabel": {
+    "message": "Progresso:"
   },
   "fileFormatLabel": {
     "message": "Formato:"
