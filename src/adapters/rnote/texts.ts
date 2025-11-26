@@ -27,10 +27,9 @@ function splitWrappedText(text: HTMLElement): string[] {
 }
 
 
-function processParagraph(file: File, paragraph: HTMLParagraphElement,
+function* processParagraph(file: File, paragraph: HTMLParagraphElement,
                           offsets: Offsets, dark_mode: boolean, page_size: PageSize, zoom_level: number) {
     const texts = paragraph.getElementsByClassName("TextRun") as HTMLCollectionOf<HTMLSpanElement>;
-    const converted_texts: StrokeComponent[] = []
     for (const text of texts) {
         if (text.children[0]?.innerHTML) {
             const textColor = window.getComputedStyle(text).getPropertyValue("color");
@@ -97,11 +96,11 @@ function processParagraph(file: File, paragraph: HTMLParagraphElement,
                                 alignment: "start",
                                 ranged_text_attributes: []
                             }, transform: {
-                                affine: [1, 0, 0, 0, 1, 0, x, y - (rect.height/2), 1]
+                                affine: [1, 0, 0, 0, 1, 0, x, y - (rect.height / 2), 1]
                             }
                         }
                         file.new_chrono(0);
-                        converted_texts.push({
+                        yield JSON.stringify({
                             value: {
                                 bitmapimage: undefined,
                                 textstroke: text_stroke,
@@ -114,21 +113,17 @@ function processParagraph(file: File, paragraph: HTMLParagraphElement,
             }
         }
     }
-    return converted_texts;
 }
 
 
-export function convertTexts(panel: HTMLDivElement, file: File, offsets: Offsets, dark_mode: boolean, page_size: PageSize, zoom_level: number) {
+export function* convertTexts(panel: HTMLDivElement, file: File, offsets: Offsets, dark_mode: boolean, page_size: PageSize, zoom_level: number) {
     LOG.info("Converting texts");
-
     const paragraphs = panel.getElementsByClassName("Paragraph") as HTMLCollectionOf<HTMLParagraphElement>;
-    const converted_texts: StrokeComponent[] = [];
     for (const paragraph of paragraphs) {
         try {
-            converted_texts.push(...processParagraph(file, paragraph, offsets, dark_mode, page_size, zoom_level));
+            yield processParagraph(file, paragraph, offsets, dark_mode, page_size, zoom_level);
         } catch (e) {
             LOG.error(`An error occurred while exporting a text paragraph: ${e}`)
         }
     }
-    return converted_texts;
 }

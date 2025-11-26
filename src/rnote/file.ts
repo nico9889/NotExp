@@ -3,13 +3,13 @@ import {LOG} from "../adapters/converter";
 import {sanitizeFileName} from "../adapters/utils";
 import {FileContent} from "./document";
 import {Colors, RGB} from "./utils";
-import {StrokeComponent} from "./stroke";
 import {ChronoComponent} from "./chrono";
 
 export class File implements DownloadableDocument {
     readonly title: string;
     private compressedBlob?: Blob = undefined;
-    private document: FileContent;
+    private readonly document: FileContent;
+    private stroke_components: string = "";
 
     constructor(title: string = "") {
         this.title = title;
@@ -30,7 +30,7 @@ export class File implements DownloadableDocument {
                             background: {
                                 color: Colors.White,
                                 pattern: "dots",
-                                pattern_size: [32,32],
+                                pattern_size: [32, 32],
                                 pattern_color: Colors.Black,
                             },
                             layout: "infinite"
@@ -41,7 +41,7 @@ export class File implements DownloadableDocument {
                         height: 0
                     },
                     camera: {
-                        offset: [0,0],
+                        offset: [0, 0],
                         size: [640, 480],
                         zoom: 1.0
                     },
@@ -55,8 +55,9 @@ export class File implements DownloadableDocument {
     }
 
     async compress(): Promise<void> {
-        const serializedDocument = JSON.stringify(this.document);
-        // Xournal++ file format is a GZIP archive with an XML file inside. We need to GZIP the XML before
+        const serializedDocument = JSON.stringify(this.document)
+            .replace('"stroke_components":[]', `"stroke_components":[${this.stroke_components}]`);;
+        // RNote++ file format is a GZIP archive with an XML file inside. We need to GZIP the XML before
         // exporting it
         const data = new Blob([serializedDocument], {type: "application/json"});
 
@@ -93,8 +94,8 @@ export class File implements DownloadableDocument {
         this.document.data.engine_snapshot.document.config.background.color = page_color;
     }
 
-    replace_strokes(converted_strokes: StrokeComponent[]) {
-        this.document.data.engine_snapshot.stroke_components = converted_strokes;
+    replace_strokes(converted_strokes: string[]) {
+        this.stroke_components = converted_strokes.join(",");
     }
 
     set_size(width: number, height: number) {
@@ -108,21 +109,20 @@ export class File implements DownloadableDocument {
 
     new_chrono(layer: number | null | "image" | "highlighter" = 0): ChronoComponent {
         let chrono: ChronoComponent;
-        if(layer === null) {
+        if (layer === null) {
             chrono = {
                 value: null, version: 0
             }
-        }
-        else if(layer === "image" || layer === "highlighter") {
-            chrono =  {
+        } else if (layer === "image" || layer === "highlighter") {
+            chrono = {
                 value: {
                     t: ++this.document.data.engine_snapshot.chrono_counter,
                     layer: layer
                 },
                 version: 1
             }
-        }else{
-            chrono =  {
+        } else {
+            chrono = {
                 value: {
                     t: ++this.document.data.engine_snapshot.chrono_counter,
                     layer: {

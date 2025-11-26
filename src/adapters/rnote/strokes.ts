@@ -4,9 +4,8 @@ import {PageSize} from "./rnote-adapter";
 import {StrokeComponent} from "../../rnote/stroke";
 import {File} from "../../rnote/file";
 
-export function convertStrokes(panel: HTMLDivElement, file: File, dark_mode: boolean, page_size: PageSize): StrokeComponent[] {
+export function* convertStrokes(panel: HTMLDivElement, file: File, dark_mode: boolean, page_size: PageSize) {
     LOG.info("Converting strokes");
-    const converted_strokes: StrokeComponent[] = [];
     const strokes = panel.getElementsByClassName("InkStrokeOuterElement") as HTMLCollectionOf<SVGElement>;
     LOG.info(`Found ${strokes.length} stroke(s)`);
     const base_color: RGB = (dark_mode) ? Colors.White : Colors.Black;
@@ -136,13 +135,12 @@ export function convertStrokes(panel: HTMLDivElement, file: File, dark_mode: boo
                     // no other notation to distinguish a highlighter by a pen
                     if (opacity < 1) { // TODO: implement Highlighter
                         file.new_chrono("highlighter");
-                    }else{
+                    } else {
                         file.new_chrono(0);
                     }
 
 
                     // stroke_component.version = chrono.value!.t;
-                    converted_strokes.push(stroke_component);
                     i += 2;
                 } else if (directive == "l") {
                     let x = parseInt(directives[i + 1]);
@@ -183,10 +181,9 @@ export function convertStrokes(panel: HTMLDivElement, file: File, dark_mode: boo
                     LOG.debug(`Skipping unrecognised stroke directive: ${directives[i]}`);
                 }
             }
-
+            yield JSON.stringify(stroke_component);
         } else {
             LOG.warn(`Invalid stroke detected: missing 'd' in ${path}`);
         }
     }
-    return converted_strokes;
 }

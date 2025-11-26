@@ -28,12 +28,12 @@ export function pack(data: ImageDataArray) {
 }
 
 
-export function convertImages(panel: HTMLDivElement, file: File, offsets: Offsets, page_size: PageSize, zoom_level: number) {
+export function* convertImages(panel: HTMLDivElement, file: File, offsets: Offsets, page_size: PageSize, zoom_level: number) {
     LOG.info("Converting images");
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    const converted_images: StrokeComponent[] = [];
+    const converted_images: string[] = [];
     const image_containers = panel.getElementsByClassName("WACImageContainer") as HTMLCollectionOf<HTMLDivElement>;
     LOG.info(`Found ${image_containers.length} image(s)`);
     for (const container of image_containers) {
@@ -93,7 +93,12 @@ export function convertImages(panel: HTMLDivElement, file: File, offsets: Offset
             }
         }
         file.new_chrono("image")
-        converted_images.push({
+        // Inelegant solution to export images max_width and max_height by side effect without
+        // scanning multiple times all the images
+        page_size.width = Math.max(page_size.width, width);
+        page_size.height = Math.max(page_size.height, height);
+
+        yield JSON.stringify({
             value: {
                 brushstroke: undefined,
                 textstroke: undefined,
@@ -110,11 +115,5 @@ export function convertImages(panel: HTMLDivElement, file: File, offsets: Offset
             }, version: 1
 
         })
-
-        // Inelegant solution to export images max_width and max_height by side effect without
-        // scanning multiple times all the images
-        page_size.width = Math.max(page_size.width, width);
-        page_size.height = Math.max(page_size.height, height);
     }
-    return converted_images
 }

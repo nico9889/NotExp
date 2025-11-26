@@ -19,9 +19,8 @@ RegisterHTMLHandler(adaptor);
 //   can choice between:
 //   * having the exported document full of empty spaces;
 //   * having non-modifiable math blocks instead, which may be better than nothing.
-export async function convertMathMLBlocks(panel: HTMLDivElement, file: File, offsets: Offsets, math_dark_mode: boolean, math_quality: MathQuality, page_size: PageSize, zoom_level: number) {
+export async function* convertMathMLBlocks(panel: HTMLDivElement, file: File, offsets: Offsets, math_dark_mode: boolean, math_quality: MathQuality, page_size: PageSize, zoom_level: number) {
     LOG.info("Converting MathML blocks");
-    const converted_blocks: StrokeComponent[] = [] // Empty output array
 
     // Getting math blocks from OneNote page
     const math_containers = panel.getElementsByClassName("MathSpan") as HTMLCollectionOf<HTMLSpanElement>;
@@ -111,7 +110,7 @@ export async function convertMathMLBlocks(panel: HTMLDivElement, file: File, off
                 }
             }
             file.new_chrono("image")
-            converted_blocks.push({
+            yield JSON.stringify({
                 value: {
                     brushstroke: undefined,
                     textstroke: undefined,
@@ -141,5 +140,4 @@ export async function convertMathMLBlocks(panel: HTMLDivElement, file: File, off
             console.error("NEX: Error converting to SVG", e);
         }
     }
-    return converted_blocks;
 }

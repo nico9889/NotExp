@@ -5,7 +5,6 @@ import {convertStrokes} from "./strokes";
 import {DownloadableDocument} from "../../models/document";
 import {File} from "../../rnote/file";
 import {Colors} from "../../rnote/utils";
-import {StrokeComponent} from "../../rnote/stroke";
 import {convertTexts} from "./texts";
 import {convertImages} from "./images";
 import {convertMathMLBlocks} from "./math";
@@ -59,37 +58,41 @@ export class RNoteAdapter extends OneNoteAdapter {
     }
 
     async export(): Promise<DownloadableDocument> {
-        const converted_strokes: StrokeComponent[] = [];
+        const converted_strokes: string[] = [];
 
         // For some reason RNote generates always an empty StrokeComponent
         this.document.new_chrono(null);
-        converted_strokes.push({
+        converted_strokes.push(JSON.stringify({
             value: null,
             version: 0,
-        })
+        }))
 
         const page_color = (this.options.dark_page) ? Colors.Black : Colors.White;
         this.document.set_background_color(page_color);
         const offsets = this.offsets;
 
-        if(this.options.texts) {
-            converted_strokes.push(...convertTexts(this.panel, this.document, offsets, this.options.texts_dark_mode, this.pageSize, this.zoomLevel));
+        if (this.options.texts) {
+            for (const texts of convertTexts(this.panel, this.document, offsets, this.options.texts_dark_mode, this.pageSize, this.zoomLevel)) {
+                converted_strokes.push(...texts);
+            }
         }
         await this.progressTracker.bump();
 
-        if(this.options.images) {
+        if (this.options.images) {
             converted_strokes.push(...convertImages(this.panel, this.document, offsets, this.pageSize, this.zoomLevel));
         }
         await this.progressTracker.bump();
 
-        if(this.options.strokes){
+        if (this.options.strokes) {
             converted_strokes.push(...convertStrokes(this.panel, this.document, this.options.strokes_dark_mode, this.pageSize));
         }
         await this.progressTracker.bump();
 
-        if(this.options.maths){
-            converted_strokes.push(...await convertMathMLBlocks(this.panel, this.document, offsets, this.options.math_dark_mode, this.options.math_quality,
-                this.pageSize, this.zoomLevel));
+        if (this.options.maths) {
+            for await (const math of convertMathMLBlocks(this.panel, this.document, offsets, this.options.math_dark_mode, this.options.math_quality,
+                this.pageSize, this.zoomLevel)) {
+                converted_strokes.push(math);
+            }
         }
         await this.progressTracker.bump();
         const width = this.pageSize.width + 5;
