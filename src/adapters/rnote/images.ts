@@ -47,10 +47,8 @@ export function convertImages(panel: HTMLDivElement, file: File, offsets: Offset
         const image: HTMLImageElement = (container.getElementsByClassName("WACImage") as HTMLCollectionOf<HTMLImageElement>)[0];
         const image_boundaries = image.getBoundingClientRect();
 
-        /* Converting non-PNG image to PNG using Canvas */
         let src = image.src;
-        const isPng = new RegExp("data:image/png;base64,.*");
-        if (ctx && !isPng.test(src)) {
+        if (ctx) {
             canvas.width = image.width;
             canvas.height = image.height;
             ctx.drawImage(image, 0, 0, image.width, image.height);
