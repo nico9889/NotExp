@@ -2,7 +2,6 @@ import {Rectangle} from "../../rnote/image";
 import {LOG} from "../converter";
 import {File} from "../../rnote/file";
 import {Offsets, PageSize} from "./rnote-adapter";
-import {StrokeComponent} from "../../rnote/stroke";
 import {round3} from "../../rnote/utils";
 
 export const IMAGE_BASE64_REGEXP = new RegExp("data:image/.*;base64,");
@@ -33,7 +32,6 @@ export function* convertImages(panel: HTMLDivElement, file: File, offsets: Offse
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    const converted_images: string[] = [];
     const image_containers = panel.getElementsByClassName("WACImageContainer") as HTMLCollectionOf<HTMLDivElement>;
     LOG.info(`Found ${image_containers.length} image(s)`);
     for (const container of image_containers) {

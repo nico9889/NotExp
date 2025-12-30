@@ -1,7 +1,6 @@
 import {MathQuality} from "../../messages/convert";
 import {LOG} from "../converter";
 import {File} from "../../rnote/file";
-import {StrokeComponent} from "../../rnote/stroke";
 import {Offsets, PageSize} from "./rnote-adapter";
 import {IMAGE_BASE64_REGEXP, pack} from "./images";
 import {mathjax} from '@mathjax/src/mjs/mathjax.js';
