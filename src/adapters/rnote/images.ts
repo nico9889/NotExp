@@ -11,19 +11,16 @@ export const IMAGE_BASE64_REGEXP = new RegExp("data:image/.*;base64,");
 // From the Canvas we get the r,g,b,a sequence in a "byte" format, which has to be packed and
 // converted to a string to be encoded in base64
 export function pack(data: ImageDataArray) {
-    const chunks = []
+    let chunks = "";
 
     for (let i = 0; i < data.length; i += 4) {
         const a = data[i + 3]
         const r = data[i] * (a / 255);
         const g = data[i + 1] * (a / 255);
         const b = data[i + 2] * (a / 255);
-        chunks.push(String.fromCharCode(r));
-        chunks.push(String.fromCharCode(g));
-        chunks.push(String.fromCharCode(b));
-        chunks.push(String.fromCharCode(a));
+        chunks += `${String.fromCharCode(r)}${String.fromCharCode(g)}${String.fromCharCode(b)}${String.fromCharCode(a)}`;
     }
-    return chunks.join("");
+    return chunks;
 }
 
 
