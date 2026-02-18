@@ -3,13 +3,13 @@ import {TexImage} from "../../xournalpp/teximage";
 import {MathMLToLaTeX} from "mathml-to-latex";
 import {LOG} from "../converter";
 import {Offsets, PageSize} from "./xournalpp-adapter";
-import {IMAGE_BASE64_REGEXP} from "./images";
 import {mathjax} from '@mathjax/src/mjs/mathjax.js';
 import {browserAdaptor} from "@mathjax/src/mjs/adaptors/browserAdaptor.js";
 import {RegisterHTMLHandler} from "@mathjax/src/mjs/handlers/html.js";
 import {MathML} from "@mathjax/src/mjs/input/mathml.js";
 import {SVG} from "@mathjax/src/mjs/output/svg.js";
 import {Layer} from "../../xournalpp/page";
+import {blobToBase64} from "../utils";
 
 const UNSAFE_XML_SPACE = new RegExp("&nbsp;", "g");
 
@@ -31,7 +31,7 @@ export async function convertMathMLBlocks(panel: HTMLDivElement, layer: Layer, o
     LOG.info(`Found ${math_containers.length} MathML block(s)`);
 
     // Preparing canvas for image conversion
-    const canvas = document.createElement("canvas") as HTMLCanvasElement;
+    const canvas = new OffscreenCanvas(1, 1);
     const ctx = canvas.getContext("2d")!;
 
     const mathDocument = mathjax.document('', {
@@ -76,7 +76,7 @@ export async function convertMathMLBlocks(panel: HTMLDivElement, layer: Layer, o
             ctx.drawImage(img, 0, 0, boundingRect.width * math_quality / zoom_level, boundingRect.height * math_quality / zoom_level);
 
             // Exporting the Canvas as an encoded Base64 PNG string
-            const uri = canvas.toDataURL("image/png", 1);
+            const canvas_blob = await canvas.convertToBlob({type: "image/png"});
 
             // Clearing the Canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -85,7 +85,7 @@ export async function convertMathMLBlocks(panel: HTMLDivElement, layer: Layer, o
             // the XML conversion
             const tex_image = layer.addMath(
                 latex,
-                uri.replace(IMAGE_BASE64_REGEXP, ""),
+                await blobToBase64(canvas_blob),
                 (boundingRect.x - offsets.x) / zoom_level,
                 (boundingRect.y - offsets.y) / zoom_level - (fontSize / 2),
                 img.width,

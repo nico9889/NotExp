@@ -26,8 +26,8 @@ export async function* convertMathMLBlocks(panel: HTMLDivElement, file: File, of
     LOG.info(`Found ${math_containers.length} MathML block(s)`);
 
     // Preparing canvas for image conversion
-    const canvas = document.createElement("canvas") as HTMLCanvasElement;
-    const ctx = canvas.getContext("2d")!;
+    const canvas = new OffscreenCanvas(1, 1);
+    const ctx = canvas.getContext("2d", { willReadFrequently: true })!;
 
     const mathDocument = mathjax.document('', {
         InputJax: new MathML(),

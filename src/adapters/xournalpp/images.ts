@@ -2,13 +2,14 @@ import {Image} from "../../xournalpp/image";
 import {LOG} from "../converter";
 import {Layer} from "../../xournalpp/page";
 import {Offsets, PageSize} from "./xournalpp-adapter";
+import {blobToBase64} from "../utils";
 
 export const IMAGE_BASE64_REGEXP = new RegExp("data:image/.*;base64,");
 
 
-export function convertImages(panel: HTMLDivElement, layer: Layer, offsets: Offsets, page_size: PageSize, zoom_level: number) {
+export async function convertImages(panel: HTMLDivElement, layer: Layer, offsets: Offsets, page_size: PageSize, zoom_level: number) {
     LOG.info("Converting images");
-    const canvas = document.createElement("canvas");
+    const canvas = new OffscreenCanvas(1, 1);
     const ctx = canvas.getContext("2d");
 
     const converted_images: Image[] = [];
@@ -32,7 +33,8 @@ export function convertImages(panel: HTMLDivElement, layer: Layer, offsets: Offs
             canvas.width = image.width;
             canvas.height = image.height;
             ctx.drawImage(image, 0, 0, image.width, image.height);
-            src = canvas.toDataURL("image/png", 0.8);
+            const canvas_blob = await canvas.convertToBlob({type: "image/png"});
+            src = await blobToBase64(canvas_blob);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 

@@ -26,8 +26,8 @@ export function pack(data: ImageDataArray) {
 
 export function* convertImages(panel: HTMLDivElement, file: File, offsets: Offsets, page_size: PageSize, zoom_level: number) {
     LOG.info("Converting images");
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+    const canvas = new OffscreenCanvas(1, 1);
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
     const image_containers = panel.getElementsByClassName("WACImageContainer") as HTMLCollectionOf<HTMLDivElement>;
     LOG.info(`Found ${image_containers.length} image(s)`);
@@ -47,7 +47,7 @@ export function* convertImages(panel: HTMLDivElement, file: File, offsets: Offse
             canvas.width = image.width;
             canvas.height = image.height;
             ctx.drawImage(image, 0, 0, image.width, image.height);
-            const raw = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const raw: ImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             src = btoa(pack(raw.data));
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
@@ -108,7 +108,6 @@ export function* convertImages(panel: HTMLDivElement, file: File, offsets: Offse
                     rectangle: position,
                 }
             }, version: 1
-
         })
     }
 }
