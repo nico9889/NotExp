@@ -32,10 +32,10 @@ export function* convertImages(panel: HTMLDivElement, file: File, offsets: Offse
     const image_containers = panel.getElementsByClassName("WACImageContainer") as HTMLCollectionOf<HTMLDivElement>;
     LOG.info(`Found ${image_containers.length} image(s)`);
     for (const container of image_containers) {
-        // OneNote uses (at least?) two type of positioning method for the images:
+        // OneNote uses (at least?) two types of positioning method for the images:
         // Absolute: coordinates are inside the WACImageContainer style;
         // Relative: the image is shifted by an offset from the main WACViewPanel.
-        // We try first with the absolute position, if it's not found we try to calculate the relative position,
+        // We try first with the absolute position, if it's not found, we try to calculate the relative position,
         // converting it to an (hopefully correct) absolute one
         const x: number = Number(container.style.left.replace("px", "")) || 0;
         const y: number = Number(container.style.top.replace("px", "")) || 0;
