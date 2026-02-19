@@ -1,7 +1,7 @@
 import {COLOR_REGEXP, LOG} from "../converter";
 import {File} from "../../rnote/file";
 import {Colors, RGB, round3} from "../../rnote/utils";
-import {Offsets, PageSize} from "./rnote-adapter";
+import {Offsets} from "./rnote-adapter";
 import {TextStroke} from "../../rnote/text";
 import {StrokeComponent} from "../../rnote/stroke";
 

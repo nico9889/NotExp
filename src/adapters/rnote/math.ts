@@ -1,7 +1,7 @@
 import {MathQuality} from "../../messages/convert";
 import {LOG} from "../converter";
 import {File} from "../../rnote/file";
-import {Offsets, PageSize} from "./rnote-adapter";
+import {Offsets} from "./rnote-adapter";
 import {IMAGE_BASE64_REGEXP, pack} from "./images";
 import {mathjax} from '@mathjax/src/mjs/mathjax.js';
 import {browserAdaptor} from "@mathjax/src/mjs/adaptors/browserAdaptor.js";

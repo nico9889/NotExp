@@ -1,7 +1,7 @@
 import {Rectangle} from "../../rnote/image";
 import {LOG} from "../converter";
 import {File} from "../../rnote/file";
-import {Offsets, PageSize} from "./rnote-adapter";
+import {Offsets} from "./rnote-adapter";
 import {round3} from "../../rnote/utils";
 import {StrokeComponent} from "../../rnote/stroke";
 

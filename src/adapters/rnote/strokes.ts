@@ -1,6 +1,5 @@
 import {Colors, RGB, round3} from "../../rnote/utils";
 import {COLOR_REGEXP, LOG} from "../converter";
-import {PageSize} from "./rnote-adapter";
 import {StrokeComponent} from "../../rnote/stroke";
 import {File} from "../../rnote/file";
 
