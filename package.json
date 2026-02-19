@@ -21,7 +21,7 @@
     "html-minifier-next": "^4.19.1",
     "mathjax": "^4.1.0",
     "mathml-to-latex": "^1.5.0",
-    "node-html-parser": "^7.1.0",
+    "node-html-parser": "^7.0.2",
     "typescript": "^5.6.4",
     "web-ext": "9.3.0",
     "webextension-polyfill": "^0.12.0"
