@@ -10,6 +10,7 @@ import {MathML} from "@mathjax/src/mjs/input/mathml.js";
 import {SVG} from "@mathjax/src/mjs/output/svg.js";
 import {round3} from "../../rnote/utils";
 import {Rectangle} from "../../rnote/image";
+import {StrokeComponent} from "../../rnote/stroke";
 
 const adaptor = browserAdaptor();
 RegisterHTMLHandler(adaptor);
@@ -18,7 +19,7 @@ RegisterHTMLHandler(adaptor);
 //   can choice between:
 //   * having the exported document full of empty spaces;
 //   * having non-modifiable math blocks instead, which may be better than nothing.
-export async function* convertMathMLBlocks(panel: HTMLDivElement, file: File, offsets: Offsets, math_dark_mode: boolean, math_quality: MathQuality, page_size: PageSize, zoom_level: number) {
+export async function* convertMathMLBlocks(panel: HTMLDivElement, file: File, offsets: Offsets, math_dark_mode: boolean, math_quality: MathQuality, page_size: PageSize, zoom_level: number): AsyncGenerator<StrokeComponent> {
     LOG.info("Converting MathML blocks");
 
     // Getting math blocks from OneNote page
@@ -109,7 +110,7 @@ export async function* convertMathMLBlocks(panel: HTMLDivElement, file: File, of
                 }
             }
             file.new_chrono("image")
-            yield JSON.stringify({
+            yield {
                 value: {
                     brushstroke: undefined,
                     textstroke: undefined,
@@ -124,8 +125,7 @@ export async function* convertMathMLBlocks(panel: HTMLDivElement, file: File, of
                         rectangle: position,
                     }
                 }, version: 1
-
-            })
+            }
 
             page_size.width = Math.max(page_size.width, real_x + width);
             page_size.height = Math.max(page_size.height, real_y + height);

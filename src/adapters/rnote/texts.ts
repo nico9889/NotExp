@@ -3,6 +3,7 @@ import {File} from "../../rnote/file";
 import {Colors, RGB, round3} from "../../rnote/utils";
 import {Offsets, PageSize} from "./rnote-adapter";
 import {TextStroke} from "../../rnote/text";
+import {StrokeComponent} from "../../rnote/stroke";
 
 
 // Original idea: https://www.youtube.com/watch?v=kuGA8a_W4s4
@@ -27,7 +28,7 @@ function splitWrappedText(text: HTMLElement): string[] {
 
 
 function* processParagraph(file: File, paragraph: HTMLParagraphElement,
-                          offsets: Offsets, dark_mode: boolean, page_size: PageSize, zoom_level: number) {
+                          offsets: Offsets, dark_mode: boolean, page_size: PageSize, zoom_level: number): Generator<StrokeComponent> {
     const texts = paragraph.getElementsByClassName("TextRun") as HTMLCollectionOf<HTMLSpanElement>;
     for (const text of texts) {
         if (text.children[0]?.innerHTML) {
@@ -99,13 +100,13 @@ function* processParagraph(file: File, paragraph: HTMLParagraphElement,
                             }
                         }
                         file.new_chrono(0);
-                        yield JSON.stringify({
+                        yield {
                             value: {
                                 bitmapimage: undefined,
                                 textstroke: text_stroke,
                                 brushstroke: undefined
                             }, version: 1
-                        });
+                        };
                     }
 
                 }

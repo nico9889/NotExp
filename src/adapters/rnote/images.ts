@@ -3,6 +3,7 @@ import {LOG} from "../converter";
 import {File} from "../../rnote/file";
 import {Offsets, PageSize} from "./rnote-adapter";
 import {round3} from "../../rnote/utils";
+import {StrokeComponent} from "../../rnote/stroke";
 
 export const IMAGE_BASE64_REGEXP = new RegExp("data:image/.*;base64,");
 
@@ -24,7 +25,7 @@ export function pack(data: ImageDataArray) {
 }
 
 
-export function* convertImages(panel: HTMLDivElement, file: File, offsets: Offsets, page_size: PageSize, zoom_level: number) {
+export function* convertImages(panel: HTMLDivElement, file: File, offsets: Offsets, page_size: PageSize, zoom_level: number): Generator<StrokeComponent> {
     LOG.info("Converting images");
     const canvas = new OffscreenCanvas(1, 1);
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
@@ -93,7 +94,7 @@ export function* convertImages(panel: HTMLDivElement, file: File, offsets: Offse
         page_size.width = Math.max(page_size.width, width);
         page_size.height = Math.max(page_size.height, height);
 
-        yield JSON.stringify({
+        yield {
             value: {
                 brushstroke: undefined,
                 textstroke: undefined,
@@ -108,6 +109,6 @@ export function* convertImages(panel: HTMLDivElement, file: File, offsets: Offse
                     rectangle: position,
                 }
             }, version: 1
-        })
+        }
     }
 }

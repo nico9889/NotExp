@@ -4,14 +4,14 @@ import {sanitizeFileName} from "../adapters/utils";
 import {FileContent} from "./document";
 import {Colors, RGB} from "./utils";
 import {ChronoComponent} from "./chrono";
+import {StrokeComponent} from "./stroke";
 
 export class File implements DownloadableDocument {
     readonly title: string;
     private compressedBlob?: Blob = undefined;
     private readonly document: FileContent;
-    private stroke_components: string = "";
 
-    constructor(title: string = "") {
+    constructor(title: string = "", private stroke_generator: () => AsyncIterableIterator<StrokeComponent>) {
         this.title = title;
         this.document = {
             data: {
@@ -55,22 +55,71 @@ export class File implements DownloadableDocument {
     }
 
     async compress(): Promise<void> {
-        const serializedDocument = JSON.stringify(this.document)
-            .replace('"stroke_components":[]', `"stroke_components":[${this.stroke_components}]`);;
-        // RNote++ file format is a GZIP archive with an XML file inside. We need to GZIP the XML before
-        // exporting it
-        const data = new Blob([serializedDocument], {type: "application/json"});
+        const document = JSON.stringify(this.document);
+        const index = document.indexOf("\"stroke_components\":[]")
+        const header = document.substring(0, index);
 
-        // Using browser built-in compression API to generate the GZipped file
-        const compressedStream = data.stream().pipeThrough(
-            new CompressionStream("gzip")
-        );
+        const textEncoder = new TextEncoder();
+        const cs = new CompressionStream("gzip");
 
-        const response = new Response(compressedStream);
+
+        // Start reading from the compression stream "concurrently"
+        // This is needed otherwise the CompressionStream get stuck, as it cannot buffer the received data.
+        const chunks: Uint8Array[] = [];
+        const readerPromise = (async () => {
+            const reader = cs.readable.getReader();
+            try {
+                let finished = false;
+                while (!finished) {
+                    const {done, value} = await reader.read();
+                    finished = done;
+                    if (value !== undefined)
+                        chunks.push(value);
+                }
+            } finally {
+                reader.releaseLock();
+            }
+        })();
+
+        // Get the writer to pipe the data inside the CompressionStream
+        const writer = cs.writable.getWriter();
+        try {
+            // Write the file "header" data
+            await writer.write(textEncoder.encode(header));
+
+            // Write the stroke components data
+            await writer.write(textEncoder.encode('"stroke_components":['));
+
+
+
+            let first = true;
+            for await (const value of this.stroke_generator()) {
+                if (!first) await writer.write(textEncoder.encode(','));
+                await writer.write(textEncoder.encode(JSON.stringify(value)));
+                first = false;
+            }
+
+            // Write the Chrono Components data, this must be write AFTER the Stroke Components, as the field get
+            // populated by the iterator
+            await writer.write(textEncoder.encode('],"chrono_components":'));
+            await writer.write(textEncoder.encode(JSON.stringify(this.document.data.engine_snapshot.chrono_components)))
+            await writer.write(textEncoder.encode(',"chrono_counter":'));
+            await writer.write(textEncoder.encode(this.document.data.engine_snapshot.chrono_counter.toString()));
+            await writer.write(textEncoder.encode('}}'));
+
+            // In the end, write the file version
+            await writer.write(textEncoder.encode(',"version":"'));
+            await writer.write(textEncoder.encode(this.document.version));
+            await writer.write(textEncoder.encode('"}'));
+        } finally {
+            await writer.close();
+        }
+
+        await readerPromise;
 
         // The GZIP file is associated to a phantom Anchor element to be exported
         LOG.info("Exporting file");
-        this.compressedBlob = await response.blob();
+        this.compressedBlob = new Blob(chunks as any, {type: "application/gzip"});
     }
 
 
@@ -92,10 +141,6 @@ export class File implements DownloadableDocument {
 
     set_background_color(page_color: RGB) {
         this.document.data.engine_snapshot.document.config.background.color = page_color;
-    }
-
-    replace_strokes(converted_strokes: string[]) {
-        this.stroke_components = converted_strokes.join(",");
     }
 
     set_size(width: number, height: number) {

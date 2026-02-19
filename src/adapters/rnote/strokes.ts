@@ -4,7 +4,7 @@ import {PageSize} from "./rnote-adapter";
 import {StrokeComponent} from "../../rnote/stroke";
 import {File} from "../../rnote/file";
 
-export function* convertStrokes(panel: HTMLDivElement, file: File, dark_mode: boolean, page_size: PageSize) {
+export function* convertStrokes(panel: HTMLDivElement, file: File, dark_mode: boolean, page_size: PageSize): Generator<StrokeComponent> {
     LOG.info("Converting strokes");
     const strokes = panel.getElementsByClassName("InkStrokeOuterElement") as HTMLCollectionOf<SVGElement>;
     LOG.info(`Found ${strokes.length} stroke(s)`);
@@ -181,7 +181,7 @@ export function* convertStrokes(panel: HTMLDivElement, file: File, dark_mode: bo
                     LOG.debug(`Skipping unrecognised stroke directive: ${directives[i]}`);
                 }
             }
-            yield JSON.stringify(stroke_component);
+            yield stroke_component;
         } else {
             LOG.warn(`Invalid stroke detected: missing 'd' in ${path}`);
         }
