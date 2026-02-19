@@ -28,10 +28,9 @@ export function pack(data: ImageDataArray) {
 export function* convertImages(panel: HTMLDivElement, file: File, offsets: Offsets, zoom_level: number): Generator<StrokeComponent> {
     LOG.info("Converting images");
     const canvas = new OffscreenCanvas(1, 1);
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    const ctx = canvas.getContext("2d", {willReadFrequently: true});
 
     const image_containers = panel.getElementsByClassName("WACImageContainer") as HTMLCollectionOf<HTMLDivElement>;
-    LOG.info(`Found ${image_containers.length} image(s)`);
     for (const container of image_containers) {
         // OneNote uses (at least?) two types of positioning method for the images:
         // Absolute: coordinates are inside the WACImageContainer style;
@@ -41,70 +40,76 @@ export function* convertImages(panel: HTMLDivElement, file: File, offsets: Offse
         const x: number = Number(container.style.left.replace("px", "")) || 0;
         const y: number = Number(container.style.top.replace("px", "")) || 0;
         const image: HTMLImageElement = (container.getElementsByClassName("WACImage") as HTMLCollectionOf<HTMLImageElement>)[0];
-        const image_boundaries = image.getBoundingClientRect();
 
-        let src = image.src;
-        if (ctx) {
-            canvas.width = image.width;
-            canvas.height = image.height;
-            ctx.drawImage(image, 0, 0, image.width, image.height);
-            const raw: ImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            src = btoa(pack(raw.data));
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-        const data = src.replace(IMAGE_BASE64_REGEXP, "");
+        // OneNote triplicates the images selected by the user for unknown reasons. The duplicated images contain other
+        // tags other than the WACImage one, so we filter them
+        if (image.classList.length === 1) {
+            const image_boundaries = image.getBoundingClientRect();
 
-        const real_x = round3(x || ((image_boundaries.x - offsets.x) / zoom_level));
-        const real_y = round3(y || ((image_boundaries.y - offsets.y) / zoom_level));
-
-        const width = round3(canvas.width);
-        const height = round3(canvas.height);
-
-        const half_width = round3(width / 2);
-        const half_height = round3(height / 2);
-
-        const size: Rectangle = {
-            cuboid: {
-                half_extents: [half_width, half_height],
-            },
-            transform: {
-                affine: [
-                    1, 0, 0,
-                    0, 1, 0,
-                    half_width, half_height, 1
-                ]
+            let src = image.src;
+            if (ctx) {
+                canvas.width = image.width;
+                canvas.height = image.height;
+                ctx.drawImage(image, 0, 0, image.width, image.height);
+                const raw: ImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                src = btoa(pack(raw.data));
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
-        }
+            const data = src.replace(IMAGE_BASE64_REGEXP, "");
 
-        const position: Rectangle = {
-            cuboid: {
-                half_extents: [half_width, half_height],
-            },
-            transform: {
-                affine: [
-                    1, 0, 0,
-                    0, 1, 0,
-                    real_x + half_width, real_y + half_height, 1
-                ]
-            }
-        }
-        file.new_chrono("image")
+            const real_x = round3(x || ((image_boundaries.x - offsets.x) / zoom_level));
+            const real_y = round3(y || ((image_boundaries.y - offsets.y) / zoom_level));
 
-        yield {
-            value: {
-                brushstroke: undefined,
-                textstroke: undefined,
-                bitmapimage: {
-                    image: {
-                        data: data,
-                        rectangle: size,
-                        pixel_width: Math.round(width),
-                        pixel_height: Math.round(height),
-                        memory_format: "R8g8b8a8Premultiplied"
-                    },
-                    rectangle: position,
+            const width = round3(canvas.width);
+            const height = round3(canvas.height);
+
+            const half_width = round3(width / 2);
+            const half_height = round3(height / 2);
+
+            const size: Rectangle = {
+                cuboid: {
+                    half_extents: [half_width, half_height],
+                },
+                transform: {
+                    affine: [
+                        1, 0, 0,
+                        0, 1, 0,
+                        half_width, half_height, 1
+                    ]
                 }
-            }, version: 1
+            }
+
+            const position: Rectangle = {
+                cuboid: {
+                    half_extents: [half_width, half_height],
+                },
+                transform: {
+                    affine: [
+                        1, 0, 0,
+                        0, 1, 0,
+                        real_x + half_width, real_y + half_height, 1
+                    ]
+                }
+            }
+            file.new_chrono("image")
+
+            yield {
+                value: {
+                    brushstroke: undefined,
+                    textstroke: undefined,
+                    bitmapimage: {
+                        image: {
+                            data: data,
+                            rectangle: size,
+                            pixel_width: Math.round(width),
+                            pixel_height: Math.round(height),
+                            memory_format: "R8g8b8a8Premultiplied"
+                        },
+                        rectangle: position,
+                    }
+                }, version: 1
+            }
         }
+
     }
 }

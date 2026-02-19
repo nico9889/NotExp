@@ -24,38 +24,43 @@ export async function convertImages(panel: HTMLDivElement, layer: Layer, offsets
         const x: number = Number(container.style.left.replace("px", "")) || 0;
         const y: number = Number(container.style.top.replace("px", "")) || 0;
         const image: HTMLImageElement = (container.getElementsByClassName("WACImage") as HTMLCollectionOf<HTMLImageElement>)[0];
-        const image_boundaries = image.getBoundingClientRect();
 
-        /* Converting non-PNG image to PNG using Canvas */
-        let src = image.src;
-        const isPng = new RegExp("data:image/png;base64,.*");
-        if (ctx && !isPng.test(src)) {
-            canvas.width = image.width;
-            canvas.height = image.height;
-            ctx.drawImage(image, 0, 0, image.width, image.height);
-            const canvas_blob = await canvas.convertToBlob({type: "image/png"});
-            src = await blobToBase64(canvas_blob);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // OneNote triplicates the images selected by the user for unknown reasons. The duplicated images contain other
+        // tags other than the WACImage one, so we filter them
+        if (image.classList.length === 1) {
+            const image_boundaries = image.getBoundingClientRect();
+
+            /* Converting non-PNG image to PNG using Canvas */
+            let src = image.src;
+            const isPng = new RegExp("data:image/png;base64,.*");
+            if (ctx && !isPng.test(src)) {
+                canvas.width = image.width;
+                canvas.height = image.height;
+                ctx.drawImage(image, 0, 0, image.width, image.height);
+                const canvas_blob = await canvas.convertToBlob({type: "image/png"});
+                src = await blobToBase64(canvas_blob);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+
+            const data = src.replace(IMAGE_BASE64_REGEXP, "");
+
+            const real_x = (x || ((image_boundaries.x - offsets.x) / zoom_level));
+            const real_y = (y || ((image_boundaries.y - offsets.y) / zoom_level));
+
+            const converted_image = layer.addImage(
+                data,
+                real_x,
+                real_y,
+                image.width,
+                image.height
+            );
+            converted_images.push(converted_image);
+
+            // Inelegant solution to export images max_width and max_height by side effect without
+            // scanning multiple times all the images
+            page_size.width = Math.max(page_size.width, converted_image.right);
+            page_size.height = Math.max(page_size.height, converted_image.bottom);
         }
-
-        const data = src.replace(IMAGE_BASE64_REGEXP, "");
-
-        const real_x = (x || ((image_boundaries.x - offsets.x) / zoom_level));
-        const real_y = (y || ((image_boundaries.y - offsets.y) / zoom_level));
-
-        const converted_image = layer.addImage(
-            data,
-            real_x,
-            real_y,
-            image.width,
-            image.height
-        );
-        converted_images.push(converted_image);
-
-        // Inelegant solution to export images max_width and max_height by side effect without
-        // scanning multiple times all the images
-        page_size.width = Math.max(page_size.width, converted_image.right);
-        page_size.height = Math.max(page_size.height, converted_image.bottom);
     }
     return converted_images
 }
