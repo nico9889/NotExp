@@ -25,7 +25,7 @@ export function pack(data: ImageDataArray) {
 }
 
 
-export function* convertImages(panel: HTMLDivElement, file: File, offsets: Offsets, page_size: PageSize, zoom_level: number): Generator<StrokeComponent> {
+export function* convertImages(panel: HTMLDivElement, file: File, offsets: Offsets, zoom_level: number): Generator<StrokeComponent> {
     LOG.info("Converting images");
     const canvas = new OffscreenCanvas(1, 1);
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
@@ -89,10 +89,6 @@ export function* convertImages(panel: HTMLDivElement, file: File, offsets: Offse
             }
         }
         file.new_chrono("image")
-        // Inelegant solution to export images max_width and max_height by side effect without
-        // scanning multiple times all the images
-        page_size.width = Math.max(page_size.width, width);
-        page_size.height = Math.max(page_size.height, height);
 
         yield {
             value: {

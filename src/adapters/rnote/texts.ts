@@ -28,7 +28,7 @@ function splitWrappedText(text: HTMLElement): string[] {
 
 
 function* processParagraph(file: File, paragraph: HTMLParagraphElement,
-                          offsets: Offsets, dark_mode: boolean, page_size: PageSize, zoom_level: number): Generator<StrokeComponent> {
+                          offsets: Offsets, dark_mode: boolean, zoom_level: number): Generator<StrokeComponent> {
     const texts = paragraph.getElementsByClassName("TextRun") as HTMLCollectionOf<HTMLSpanElement>;
     for (const text of texts) {
         if (text.children[0]?.innerHTML) {
@@ -75,10 +75,6 @@ function* processParagraph(file: File, paragraph: HTMLParagraphElement,
                         const x = (rect.x - offsets.x) / zoom_level;
                         const y = (rect.y - offsets.y) / zoom_level;
                         const text_width = rect.width / zoom_level;
-                        // Inelegant solution to export texts max_width and max_height by side effect without
-                        // scanning multiple times all the texts
-                        page_size.width = Math.max(page_size.width, x + text_width);
-                        page_size.height = Math.max(page_size.height, y + (rect.height / zoom_level));
 
                         const text_stroke: TextStroke = {
                             text: line, text_style: {
@@ -116,12 +112,12 @@ function* processParagraph(file: File, paragraph: HTMLParagraphElement,
 }
 
 
-export function* convertTexts(panel: HTMLDivElement, file: File, offsets: Offsets, dark_mode: boolean, page_size: PageSize, zoom_level: number) {
+export function* convertTexts(panel: HTMLDivElement, file: File, offsets: Offsets, dark_mode: boolean, zoom_level: number) {
     LOG.info("Converting texts");
     const paragraphs = panel.getElementsByClassName("Paragraph") as HTMLCollectionOf<HTMLParagraphElement>;
     for (const paragraph of paragraphs) {
         try {
-            yield processParagraph(file, paragraph, offsets, dark_mode, page_size, zoom_level);
+            yield processParagraph(file, paragraph, offsets, dark_mode, zoom_level);
         } catch (e) {
             LOG.error(`An error occurred while exporting a text paragraph: ${e}`)
         }

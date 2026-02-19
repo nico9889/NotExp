@@ -71,7 +71,7 @@ export class RNoteAdapter extends OneNoteAdapter {
             };
 
             if (self.options.texts) {
-                for (const texts of convertTexts(self.panel, self.document, self.offsets, self.options.texts_dark_mode, self.pageSize, self.zoomLevel)) {
+                for (const texts of convertTexts(self.panel, self.document, self.offsets, self.options.texts_dark_mode, self.zoomLevel)) {
                     for (const text of texts) {
                         yield text;
                     }
@@ -80,14 +80,14 @@ export class RNoteAdapter extends OneNoteAdapter {
             await self.progressTracker.bump();
 
             if (self.options.images) {
-                for (const image of convertImages(self.panel, self.document, self.offsets, self.pageSize, self.zoomLevel)) {
+                for (const image of convertImages(self.panel, self.document, self.offsets,  self.zoomLevel)) {
                     yield image;
                 }
             }
             await self.progressTracker.bump();
 
             if (self.options.strokes) {
-                for (const stroke of convertStrokes(self.panel, self.document, self.options.strokes_dark_mode, self.pageSize)) {
+                for (const stroke of convertStrokes(self.panel, self.document, self.options.strokes_dark_mode)) {
                     yield stroke;
                 }
             }
@@ -95,7 +95,7 @@ export class RNoteAdapter extends OneNoteAdapter {
 
             if (self.options.maths) {
                 for await (const math of convertMathMLBlocks(self.panel, self.document, self.offsets, self.options.math_dark_mode, self.options.math_quality,
-                    self.pageSize, self.zoomLevel)) {
+                     self.zoomLevel)) {
                     yield math;
                 }
             }

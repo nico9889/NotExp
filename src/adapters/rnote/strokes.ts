@@ -4,7 +4,7 @@ import {PageSize} from "./rnote-adapter";
 import {StrokeComponent} from "../../rnote/stroke";
 import {File} from "../../rnote/file";
 
-export function* convertStrokes(panel: HTMLDivElement, file: File, dark_mode: boolean, page_size: PageSize): Generator<StrokeComponent> {
+export function* convertStrokes(panel: HTMLDivElement, file: File, dark_mode: boolean): Generator<StrokeComponent> {
     LOG.info("Converting strokes");
     const strokes = panel.getElementsByClassName("InkStrokeOuterElement") as HTMLCollectionOf<SVGElement>;
     LOG.info(`Found ${strokes.length} stroke(s)`);
@@ -155,10 +155,6 @@ export function* convertStrokes(panel: HTMLDivElement, file: File, dark_mode: bo
                         const next_x = old_coords[0] + (x * scale_x);
                         const next_y = old_coords[1] + (y * scale_y);
 
-                        // Inelegant solution to export strokes max_width and max_height by side effect without
-                        // scanning multiple times all the strokes
-                        page_size.width = Math.max(page_size.width, next_x);
-                        page_size.height = Math.max(page_size.height, next_y);
                         stroke_component.value!.brushstroke!.path.segments.push({
                             lineto: {
                                 end: {

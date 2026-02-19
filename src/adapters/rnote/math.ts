@@ -19,7 +19,7 @@ RegisterHTMLHandler(adaptor);
 //   can choice between:
 //   * having the exported document full of empty spaces;
 //   * having non-modifiable math blocks instead, which may be better than nothing.
-export async function* convertMathMLBlocks(panel: HTMLDivElement, file: File, offsets: Offsets, math_dark_mode: boolean, math_quality: MathQuality, page_size: PageSize, zoom_level: number): AsyncGenerator<StrokeComponent> {
+export async function* convertMathMLBlocks(panel: HTMLDivElement, file: File, offsets: Offsets, math_dark_mode: boolean, math_quality: MathQuality, zoom_level: number): AsyncGenerator<StrokeComponent> {
     LOG.info("Converting MathML blocks");
 
     // Getting math blocks from OneNote page
@@ -126,9 +126,6 @@ export async function* convertMathMLBlocks(panel: HTMLDivElement, file: File, of
                     }
                 }, version: 1
             }
-
-            page_size.width = Math.max(page_size.width, real_x + width);
-            page_size.height = Math.max(page_size.height, real_y + height);
 
             // Clearing the Canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
