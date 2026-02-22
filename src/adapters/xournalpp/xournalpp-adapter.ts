@@ -79,10 +79,10 @@ async function writeTexts(onenote: OneNote, writer: WritableStreamDefaultWriter<
                     chunk.x,
                     chunk.y,
                     new RGBAColor(
-                        Math.floor(text.color.r),
-                        Math.floor(text.color.g),
-                        Math.floor(text.color.b),
-                        Math.floor(text.color.a)
+                        Math.floor(text.color.r * 255),
+                        Math.floor(text.color.g * 255),
+                        Math.floor(text.color.b * 255),
+                        Math.floor(text.color.a * 255)
                     ),
                 );
                 await writer.write(encoder.encode(xtext.element.outerHTML));
