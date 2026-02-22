@@ -76,33 +76,25 @@ export class Stroke {
             const directive = directives[i];
 
             if (directive === "M") {
-                const x = Number(directives[i + 1]);
-                const y = Number(directives[i + 2]);
+                const x = round3((Number(directives[i + 1])- this.viewBox.x) * this.scales.x + this.offsets.x);
+                const y = round3((Number(directives[i + 2])- this.viewBox.y) * this.scales.y + this.offsets.y);
                 yield [
-                    round3((x - this.viewBox.x) * this.scales.x + this.offsets.x),
-                    round3((y - this.viewBox.y) * this.scales.y + this.offsets.y)
+                    x,y
                 ];
                 previous_x = x;
                 previous_y = y;
                 i += 2;
             } else if (directive === "l") {
-                let x = parseInt(directives[i + 1]);
-                let y = parseInt(directives[i + 2]);
-                i += 3;
+                i += 1;
 
-                // Continue to scan the line value two number at times, if a number is invalid, it resets the
-                // index position and continue with normal scan looking for other directives
-                while (!isNaN(x) && !isNaN(y)) {
-                    const next_x = previous_x + (x * this.scales.x);
-                    const next_y = previous_y + (y * this.scales.y);
+                let next_x = previous_x + (parseInt(directives[i]) * this.scales.x);
+                let next_y = previous_y + (parseInt(directives[i + 1]) * this.scales.y);
 
+                while(!isNaN(next_x) && !isNaN(next_y)){
                     yield [round3(next_x), round3(next_y)];
-
-                    previous_x = x;
-                    previous_y = y;
-                    x = parseInt(directives[i]);
-                    y = parseInt(directives[i + 1]);
-                    i += 2;
+                    i+=2;
+                    next_x += (parseInt(directives[i]) * this.scales.x);
+                    next_y += (parseInt(directives[i + 1]) * this.scales.y);
                 }
                 i -= 3;
             } else if (!directive.trim()) {
