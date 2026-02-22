@@ -50,7 +50,7 @@ export class Text {
         } catch (e) {
             console.debug(`NEX: error while matching color from ${color_property}`, e);
         }
-        this.color = new Color(Number(r), Number(g), Number(b), 1);
+        this.color = new Color(Number(r), Number(g), Number(b), 1, document.options.texts_dark_mode);
         const fontFamily = getComputedStyle(text).getPropertyValue("font-family");
 
         // TODO: add the possibility to override export font
