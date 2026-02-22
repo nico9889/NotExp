@@ -13,6 +13,7 @@ export interface ViewBox {
 export class Stroke {
     readonly svg: SVGElement;
     readonly color: Color;
+    readonly width: number;
     readonly directives: string[] | undefined;
     readonly viewBox: ViewBox;
     readonly offsets: Offsets;
@@ -61,6 +62,8 @@ export class Stroke {
 
         // FIXME: this isn't 100% accurate probably
         this.scale = (this.scales.x + this.scales.y) / 2;
+
+        this.width = round3(Number(path.getAttribute("stroke-width")) * this.scale)
     }
 
     * points(): Generator<[number, number]> {
