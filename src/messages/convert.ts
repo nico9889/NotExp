@@ -30,7 +30,7 @@ export function formatToExt(format: DocumentFormat){
         case DocumentFormat.xoz:
             return "xoz";
         case DocumentFormat.rnote:
-            return "rnote";s
+            return "rnote";
     }
 }
 
