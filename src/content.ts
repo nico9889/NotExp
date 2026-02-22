@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import {convertNote, LOG} from "./adapters/converter";
+import {convertNote} from "./adapters/converter";
 import {Message} from "./messages";
 import {ConvertMessage} from "./messages/convert";
 

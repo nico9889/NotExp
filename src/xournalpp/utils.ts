@@ -45,7 +45,6 @@ export class RGBAColor {
     }
 
     toString(): string{
-        console.log(this.r, this.r.toString(16));
         return `#${this.r.toString(16).padStart(2, "0")}${this.g.toString(16).padStart(2, "0")}${this.b.toString(16).padStart(2, "0")}${this.a.toString(16).padStart(2, "0")}`
     }
 }
@@ -67,7 +66,6 @@ export class Element{
 
     xmlOpen(){
         if(this.element.children.length <= 0){
-            console.log("Empty document", this.element.outerHTML.slice(0, -2));
             return this.element.outerHTML.slice(0, -2) + ">";
         }else{
             return this.element.outerHTML.slice(0, -(this.element.localName.length + 3))

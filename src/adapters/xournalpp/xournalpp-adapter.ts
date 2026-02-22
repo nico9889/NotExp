@@ -94,10 +94,8 @@ async function writeTexts(onenote: OneNote, writer: WritableStreamDefaultWriter<
 }
 
 export async function convertToXopp(onenote: OneNote, progress: ProgressTracker): Promise<Blob> {
-    console.debug("Converting to Xournal++");
     const textEncoder = new TextEncoder();
     const cs = new CompressionStream("gzip");
-    console.debug("Compression stream created, TextEncoder created");
 
     // Start reading from the compression stream "concurrently"
     // This is needed otherwise the CompressionStream get stuck, as it cannot buffer the received data.
@@ -119,13 +117,10 @@ export async function convertToXopp(onenote: OneNote, progress: ProgressTracker)
 
     // Get the writer to pipe the data inside the CompressionStream
     const writer = cs.writable.getWriter();
-    console.debug("Writer created, Reader created");
     try {
         const document = new Document(onenote.title);
-        console.debug("Document created");
         await writer.write(textEncoder.encode(document.xmlOpen()));
 
-        console.debug("Document XML opened");
 
         const page = new Page(BackgroundType.Solid, (onenote.options.dark_page) ? Color.Black : Color.White);
         page.width = onenote.size.width;
