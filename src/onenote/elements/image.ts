@@ -62,9 +62,6 @@ export class ConvertibleImage {
         const ctx = this.getCtx();
         const image = await this.getResolvedImage();
 
-        if(this.invertColors){
-            ctx.filter = 'invert(100%)';
-        }
         /* Converting non-PNG image to PNG using Canvas */
         let src = image.src;
         const isPng = new RegExp("data:image/png;base64,.*");
@@ -72,6 +69,9 @@ export class ConvertibleImage {
         if (ctx && !isPng.test(src)) {
             canvas.width = image.width * this.scale;
             canvas.height = image.height * this.scale;
+            if(this.invertColors){
+                ctx.filter = 'invert(1)';
+            }
             ctx.drawImage(image, 0, 0, this.override_width || image.width, this.override_height || image.height);
             const canvas_blob = await canvas.convertToBlob({type: "image/png"});
             src = await blobToBase64(canvas_blob);
@@ -88,7 +88,9 @@ export class ConvertibleImage {
 
         canvas.width = image.width * this.scale;
         canvas.height = image.height * this.scale;
-
+        if(this.invertColors){
+            ctx.filter = 'invert(1)';
+        }
         ctx.drawImage(image, 0, 0, this.override_width || image.width, this.override_height || image.height);
         const raw: ImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const src = btoa(pack(raw.data));
