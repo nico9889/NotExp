@@ -45,17 +45,36 @@ export class RGBAColor {
     }
 
     toString(): string{
+        console.log(this.r, this.r.toString(16));
         return `#${this.r.toString(16).padStart(2, "0")}${this.g.toString(16).padStart(2, "0")}${this.b.toString(16).padStart(2, "0")}${this.a.toString(16).padStart(2, "0")}`
     }
 }
 
 
 export class Element{
-    protected document: XMLDocument;
     readonly element : HTMLElement;
+    static document : XMLDocument | undefined;
+    constructor(name: string) {
+        if(!Element.document){
+            const d = document.implementation.createDocument(null, "xournal");
+            const instructions = d.createProcessingInstruction("xml", "version=\"1.0\" standalone=\"no\"");
+            d.insertBefore(instructions, d.firstChild);
+            Element.document = d;
+        }
+        Element.document.firstChild?.remove();
+        this.element = Element.document.createElement(name);
+    }
 
-    constructor(document: XMLDocument, name: string) {
-        this.document = document;
-        this.element = document.createElement(name);
+    xmlOpen(){
+        if(this.element.children.length <= 0){
+            console.log("Empty document", this.element.outerHTML.slice(0, -2));
+            return this.element.outerHTML.slice(0, -2) + ">";
+        }else{
+            return this.element.outerHTML.slice(0, -(this.element.localName.length + 3))
+        }
+    }
+
+    xmlClose(){
+        return `</${this.element.localName}>`
     }
 }

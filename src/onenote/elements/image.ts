@@ -1,7 +1,25 @@
 import {OneNote} from "../onenote";
 import {round3} from "../../rnote/utils";
-import {IMAGE_BASE64_REGEXP, pack} from "../../adapters/rnote/images";
 import {blobToBase64} from "../../adapters/utils";
+
+const IMAGE_BASE64_REGEXP = new RegExp("data:image/.*;base64,");
+
+// RNote saves the image in a R8G8B8A8 Premultiplied format, which means that
+// R,G,B are premultiplied by the percentage represented by the A value.
+// From the Canvas we get the r,g,b,a sequence in a "byte" format, which has to be packed and
+// converted to a string to be encoded in base64
+export function pack(data: ImageDataArray) {
+    let chunks = "";
+
+    for (let i = 0; i < data.length; i += 4) {
+        const a = data[i + 3]
+        const r = data[i] * (a / 255);
+        const g = data[i + 1] * (a / 255);
+        const b = data[i + 2] * (a / 255);
+        chunks += `${String.fromCharCode(r)}${String.fromCharCode(g)}${String.fromCharCode(b)}${String.fromCharCode(a)}`;
+    }
+    return chunks;
+}
 
 export class ConvertibleImage {
     private static canvas: OffscreenCanvas | undefined;

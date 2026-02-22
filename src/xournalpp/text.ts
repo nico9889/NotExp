@@ -2,7 +2,6 @@ import {Color, Element, RGBAColor} from "./utils";
 
 export class Text extends Element {
     constructor(
-        document: XMLDocument,
         data: string = "",
         font: string = "Noto Sans",
         size: number = 12,
@@ -12,7 +11,7 @@ export class Text extends Element {
         // ts: number = 0,
         // fn: string = "",
     ) {
-        super(document, "text");
+        super("text");
         if (!(color instanceof RGBAColor)) {
             color = RGBAColor.fromColor(color);
         }
@@ -22,7 +21,7 @@ export class Text extends Element {
         this.element.setAttribute("y", y.toFixed(4));
         this.element.setAttribute("color", color.toString());
 
-        this.element.innerText = data;
+        this.element.textContent = data;
     }
 
     set size(size: number) {

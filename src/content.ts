@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import {convertNote} from "./adapters/converter";
+import {convertNote, LOG} from "./adapters/converter";
 import {Message} from "./messages";
 import {ConvertMessage} from "./messages/convert";
 
@@ -17,8 +17,7 @@ browser.runtime.onMessage.addListener(async (msg) => {
     const message = JSON.parse(msg.text) as (Message);
     if (message.message === 'convert') {
         try {
-            const document = await convertNote(message as ConvertMessage);
-            await document.download();
+            await convertNote(message as ConvertMessage);
         } catch (e) {
             console.error(e);
         }
