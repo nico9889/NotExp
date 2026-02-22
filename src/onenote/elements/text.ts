@@ -5,7 +5,10 @@ import {round3} from "../../rnote/utils";
 
 
 // Original idea: https://www.youtube.com/watch?v=kuGA8a_W4s4
-function splitWrappedText(text: HTMLElement): string[] {
+function splitWrappedText(text: HTMLElement | null): string[] {
+    if(!text){
+        return [];
+    }
     const range = document.createRange();
     let lastIndex = 0;
     const lines: string[] = [];
@@ -63,7 +66,7 @@ export class Text {
         if (!this.text.children) return;
         for (let child of this.text.children) {
             // const htmlChild = child as HTMLElement;
-            const nodeTextChild = child.firstChild as HTMLElement;
+            const nodeTextChild = child.firstChild as (HTMLElement | null);
             const lines = splitWrappedText(nodeTextChild);
 
             const offsets = this.document.offsets;
