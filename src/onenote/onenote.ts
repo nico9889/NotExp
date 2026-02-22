@@ -5,6 +5,7 @@ import {Paragraph} from "./elements/paragraph";
 import {Stroke} from "./elements/stroke";
 import {Image} from "./elements/image";
 import {Math as OneNoteMath} from "./elements/math";
+import {round3} from "../rnote/utils";
 
 export interface PageSize {
     width: number,
@@ -69,8 +70,8 @@ export class OneNote {
         const x = (rect.x - offsets.x) / this.zoom;
         const y = (rect.y - offsets.y) / this.zoom;
         const current_max = this.size;
-        current_max.width = Math.max(current_max.width, x + rect.width / this.zoom);
-        current_max.height = Math.max(current_max.height, y + rect.height / this.zoom);
+        current_max.width = round3(Math.max(current_max.width, x + rect.width / this.zoom));
+        current_max.height = round3(Math.max(current_max.height, y + rect.height / this.zoom));
     }
 
     * getStrokes() {
