@@ -65,7 +65,7 @@ async function writeImages(rnote: FileContent, onenote: OneNote, writer: Writabl
                                 affine: [
                                     1, 0, 0,
                                     0, 1, 0,
-                                    half_width,half_height, 1
+                                    half_width, half_height, 1
                                 ]
                             }
                         }
@@ -122,7 +122,7 @@ async function writeMath(rnote: FileContent, onenote: OneNote, writer: WritableS
                                 affine: [
                                     1, 0, 0,
                                     0, 1, 0,
-                                    half_width,half_height, 1
+                                    half_width, half_height, 1
                                 ]
                             }
                         }
@@ -157,8 +157,8 @@ async function writeStrokes(rnote: FileContent, onenote: OneNote, writer: Writab
 
         const points_generator = stroke.points();
         const start = points_generator.next().value;
-        const segments :Segment[] = [];
-        for(const point of points_generator){
+        const segments: Segment[] = [];
+        for (const point of points_generator) {
             segments.push({
                 lineto: {
                     end: {
@@ -200,7 +200,7 @@ async function writeStrokes(rnote: FileContent, onenote: OneNote, writer: Writab
             version: 1,
         }
 
-        updateChrono(rnote, (stroke.color.a < 1) ? "highlighter": 0);
+        updateChrono(rnote, (stroke.color.a < 1) ? "highlighter" : 0);
         await writer.write(encoder.encode(','));
         const output = JSON.stringify(stroke_component);
         await writer.write(encoder.encode(output));
@@ -212,9 +212,9 @@ async function writeStrokes(rnote: FileContent, onenote: OneNote, writer: Writab
 async function writeTexts(rnote: FileContent, onenote: OneNote, writer: WritableStreamDefaultWriter<BufferSource>, encoder: TextEncoder): Promise<number> {
     let exported = 0;
 
-    for(const paragraph of onenote.getParagraphs()){
-        for(const text of paragraph.getTexts()){
-            for(const chunk of text.chunks()){
+    for (const paragraph of onenote.getParagraphs()) {
+        for (const text of paragraph.getTexts()) {
+            for (const chunk of text.chunks()) {
                 const stroke_component: StrokeComponent = {
                     value: {
                         brushstroke: undefined,
@@ -263,15 +263,15 @@ export async function convertToRnote(onenote: OneNote, progress: ProgressTracker
                             height: onenote.size.height,
                             dpi: 96,
                             orientation: "portrait",
-                            border_color: Colors.Black,
+                            border_color: (onenote.options.dark_page) ? Colors.White : Colors.Black,
                             show_borders: false,
                             show_origin_indicator: false
                         },
                         background: {
-                            color: Colors.White,
+                            color: (onenote.options.dark_page) ? Colors.Black : Colors.White,
                             pattern: "dots",
                             pattern_size: [32, 32],
-                            pattern_color: Colors.Black,
+                            pattern_color: (onenote.options.dark_page) ? Colors.White : Colors.Black,
                         },
                         layout: "infinite"
                     },
