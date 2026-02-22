@@ -1,6 +1,7 @@
 import {Color} from "./colors";
 import {COLOR_REGEXP} from "../../adapters/converter";
 import {OneNote} from "../onenote";
+import {round3} from "../../rnote/utils";
 
 
 // Original idea: https://www.youtube.com/watch?v=kuGA8a_W4s4
@@ -29,6 +30,7 @@ export interface Chunk {
     x: number,
     y: number,
     width: number
+    height: number
 }
 
 export class Text {
@@ -72,11 +74,11 @@ export class Text {
                 const line = lines[index];
                 const rect = textBoundaries[index];
 
-                const x = (rect.x - offsets.x) / zoom;
-                const y = (rect.y - offsets.y) / zoom;
+                const x = round3((rect.x - offsets.x) / zoom);
+                const y = round3((rect.y - offsets.y) / zoom);
 
-                const width = rect.width / zoom;
-                yield {index, line, x, y, width};
+                const width = round3(rect.width / zoom);
+                yield {index, line, x, y, width, height: round3(rect.height)};
             }
         }
     }
