@@ -23,6 +23,17 @@ export function formatToString(format: DocumentFormat){
     }
 }
 
+export function formatToExt(format: DocumentFormat){
+    switch(format){
+        case DocumentFormat.xopp:
+            return "xopp";
+        case DocumentFormat.xoz:
+            return "xoz";
+        case DocumentFormat.rnote:
+            return "rnote";
+    }
+}
+
 export const implementedFormats = [DocumentFormat.xopp, DocumentFormat.rnote];
 
 export interface ConvertMessage extends Message {
