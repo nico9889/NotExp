@@ -6,8 +6,22 @@ import {blobToBase64} from "../../adapters/utils";
 export class ConvertibleImage {
     private static canvas: OffscreenCanvas | undefined;
     private static ctx: OffscreenCanvasRenderingContext2D | undefined;
+    private override_width: number | undefined = undefined;
+    private override_height: number | undefined = undefined;
+    private scale: number;
+    private resolvedImage?: HTMLImageElement;
 
-    constructor(protected imagePromise: Promise<HTMLImageElement>, private invertColors: boolean=false, private scale: number=1) {
+    constructor(protected imagePromise: Promise<HTMLImageElement>, private invertColors: boolean=false, scale: number = 1, override_width: number | undefined = undefined, override_height: number | undefined = undefined) {
+        this.override_width = override_width;
+        this.override_height = override_height;
+        this.scale = scale;
+    }
+
+    private async getResolvedImage(){
+        if(!this.resolvedImage){
+            this.resolvedImage = await this.imagePromise;
+        }
+        return this.resolvedImage;
     }
 
     protected getCanvas() {
@@ -28,7 +42,7 @@ export class ConvertibleImage {
     async asEncodedPng(): Promise<string> {
         const canvas = this.getCanvas();
         const ctx = this.getCtx();
-        const image = await this.imagePromise;
+        const image = await this.getResolvedImage();
 
         if(this.invertColors){
             ctx.filter = 'invert(100%)';
@@ -40,7 +54,7 @@ export class ConvertibleImage {
         if (ctx && !isPng.test(src)) {
             canvas.width = image.width * this.scale;
             canvas.height = image.height * this.scale;
-            ctx.drawImage(image, 0, 0, image.width, image.height);
+            ctx.drawImage(image, 0, 0, this.override_width || image.width, this.override_height || image.height);
             const canvas_blob = await canvas.convertToBlob({type: "image/png"});
             src = await blobToBase64(canvas_blob);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -52,15 +66,26 @@ export class ConvertibleImage {
     async asEncodedR8G8B8A8Premultiplied(): Promise<string> {
         const canvas = this.getCanvas();
         const ctx = this.getCtx();
-        const image = await this.imagePromise;
+        const image = await this.getResolvedImage();
 
-        canvas.width = image.width;
-        canvas.height = image.height;
-        ctx.drawImage(image, 0, 0, image.width, image.height);
+        canvas.width = image.width * this.scale;
+        canvas.height = image.height * this.scale;
+
+        ctx.drawImage(image, 0, 0, this.override_width || image.width, this.override_height || image.height);
         const raw: ImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const src = btoa(pack(raw.data));
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         return src.replace(IMAGE_BASE64_REGEXP, "");
+    }
+
+    async finalHeight(): Promise<number> {
+        const image = await this.getResolvedImage();
+        return image.height * this.scale;
+    }
+
+    async finalWidth(): Promise<number> {
+        const image = await this.getResolvedImage();
+        return image.width * this.scale;
     }
 }
 
