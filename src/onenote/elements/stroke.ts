@@ -2,6 +2,7 @@ import {Color} from "./colors";
 import {round3} from "../../rnote/utils";
 import {Offsets} from "../../adapters/rnote/rnote-adapter";
 import {COLOR_REGEXP, LOG} from "../../adapters/converter";
+import {OneNote} from "../onenote";
 
 export interface ViewBox {
     x: number;
@@ -20,7 +21,7 @@ export class Stroke {
     readonly scales: Offsets;
     readonly scale: number;
 
-    constructor(svg: SVGElement) {
+    constructor(document: OneNote, svg: SVGElement) {
         this.svg = svg;
 
         const path: SVGPathElement = svg.children[0] as SVGPathElement;
@@ -37,7 +38,7 @@ export class Stroke {
         const opacity = path.getAttribute("opacity");
         a = (opacity) ? Number(opacity) : 1;
 
-        this.color = new Color(r,g,b,a);
+        this.color = new Color(r,g,b,a, document.options.strokes_dark_mode);
         this.directives = path.getAttribute("d")?.split(" ");
 
 

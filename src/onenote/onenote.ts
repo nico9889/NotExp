@@ -78,7 +78,7 @@ export class OneNote {
         if (this.options.strokes) {
             const strokes = this.panel.getElementsByClassName("InkStrokeOuterElement") as HTMLCollectionOf<SVGElement>;
             for (const stroke of strokes) {
-                yield new Stroke(stroke);
+                yield new Stroke(this, stroke);
             }
         }
     }
