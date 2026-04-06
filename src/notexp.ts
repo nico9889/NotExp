@@ -33,8 +33,9 @@ const container: HTMLInputElement = document.getElementById('container') as HTML
 const mathQuality: HTMLSelectElement = document.getElementById("mathQuality") as HTMLSelectElement;
 const semanticVersion: HTMLSpanElement = document.getElementById("semanticVersion") as HTMLSpanElement;
 const formatSelector: HTMLSelectElement = document.getElementById("formatSelector") as HTMLSelectElement;
+const openOnSideButton: HTMLButtonElement = document.getElementById("openOnSide") as HTMLButtonElement;
 
-for(const format of implementedFormats){
+for (const format of implementedFormats) {
     const option = document.createElement("option");
     option.value = format.toString();
     option.textContent = formatToString(format);
@@ -78,6 +79,65 @@ let settings: Settings = {
     math_export_quality: 2,
     file_format: 0
 };
+
+async function requestSidePanelPermissions() {
+    let result = false;
+    try{
+        if(await chrome.permissions.contains({permissions:["sidePanel"]})){
+            return true;
+        }
+        result = await chrome.permissions.request({
+            permissions: ['sidePanel']
+        });
+    }catch(e){
+        // Firefox doesn't support this permission
+        return true;
+    }
+
+    if (!result) {
+        console.warn("Side Panel permission rejected.");
+    }else{
+        console.log("Side Panel permission granted.")
+    }
+    return result;
+}
+
+openOnSideButton.addEventListener("click", async () => {
+    if (!await requestSidePanelPermissions()) {
+        return;
+    }
+    if(browser["sidebarAction"]) {
+        await browser.sidebarAction.open();
+    }else if (chrome["sidePanel"]){
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if(!tab.id){
+            return;
+        }
+        await chrome.sidePanel.open({tabId: tab.id});
+    }else{
+        console.warn("Cannot open neither sidebar nor side panel");
+    }
+})
+
+if(chrome["sidePanel"]){
+    chrome.sidePanel.onOpened.addListener(() => {
+        openOnSideButton.remove();
+    })
+}
+
+if(browser["sidebarAction"]){
+    browser.sidebarAction.isOpen({windowId: undefined}).then((result) => {
+        if(result){
+            openOnSideButton.remove();
+        }
+    });
+}else{
+    // TODO: support Chrome
+    // For reasons Chromium crashes when requesting permission to open the side panel
+    // Apparently it is tremendously sensible on User Gesture context and triggering the panel to open or a permission
+    // request from the Popup, make it crash entirely...
+    openOnSideButton.remove();
+}
 
 
 document.addEventListener('DOMContentLoaded', async () => {

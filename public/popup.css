@@ -5,12 +5,32 @@
     --dark-yellow: rgb(255, 120,0);
 }
 
+html {
+    height: 100%;
+    display: block;
+    min-width: max-content;
+    max-width: 100%;
+    min-height: 100%;
+}
+
+@supports (-moz-appearance: none) {
+    html{
+        min-width: fit-content !important;
+    }
+}
+
+html, body{
+    margin:0;
+}
+
 body {
+    min-height: 100% !important;
+    max-width: 99%;
+    display: flex;
+    flex-direction: column;
     font-family: sans-serif;
     text-align: center;
-    overflow: hidden;
-    min-width: 25rem;
-    max-width: 26rem;
+    flex: 1 0 auto;
 }
 
 a {
@@ -27,7 +47,7 @@ progress{
 }
 
 .m-3 {
-    margin: 1rem;
+    margin: 0.5rem;
 }
 
 .me-1 {
@@ -63,8 +83,9 @@ progress{
 
 .container {
     display: flex;
-    flex: 1 0 auto;
     flex-direction: column;
+    flex: 1 0 auto;
+    margin: 1rem;
 }
 
 .log {
@@ -93,10 +114,15 @@ hr {
 }
 
 .btn {
+    .small {
+        box-shadow: 0 0 0.25rem 0 rgba(0, 0, 0, 0.2) !important;
+        font-size: 0.5rem !important;
+        padding: 0.25rem !important;
+    }
     border: transparent;
     background: transparent;
     flex: 1 0 auto;
-    width: max-content;
+    width: fit-content;
     padding: 0.5rem;
     box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.4);
     font-size: 1rem;
@@ -131,17 +157,30 @@ hr {
 }
 
 .row {
-    display: flex;
-    flex: 1 0 auto;
+    display: inline-flex;
+    min-width: 100%;
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+    column-gap: 0.5rem;
     flex-direction: row;
 }
 
 .col {
     display: flex;
-    flex-grow: 1;
+    flex: 1 1 0;
     flex-direction: column;
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
+}
+
+#appSettings{
+    display: flex;
+    flex: 1 0 auto;
+    max-width: 100%;
+    overflow-y: auto;
+    flex-direction: column;
+}
+
+.progress-bar{
+    min-width: 95%;
 }
 
 .form-checkbox {
@@ -155,8 +194,9 @@ label.checkbox-text {
 }
 
 .useful-links {
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
+    margin-top:auto;
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
     font-size: 1rem;
     font-weight: bold;
 }

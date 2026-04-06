@@ -28,6 +28,13 @@
   "icons": {
     "256": "NotExp.png"
   },
+  "sidebar_action": {
+    "default_icon": {
+      "255": "NotExp.png"
+    },
+    "default_title": "NotExp - Export your notes",
+    "default_panel": "popup.html"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
