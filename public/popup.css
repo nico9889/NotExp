@@ -13,6 +13,15 @@ html {
     min-height: 100%;
 }
 
+/*
+Using max-content Firefox won't shrink the content when scaling
+down the sidebar.
+It works the best using fit-content.
+On the other side, Chrome is shrinking the window at the smallest
+size possible, wrapping the row even if there's enough space on screen.
+While everything is somewhat readable, having everything in a single
+column makes it less accessible/readable.
+*/
 @supports (-moz-appearance: none) {
     html{
         min-width: fit-content !important;
