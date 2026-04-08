@@ -47,7 +47,7 @@
       "id": "{2986a98d-8431-4ed3-af49-df7b89bc555e}",
       "strict_min_version": "113.0",
       "data_collection_permissions": {
-        "required": ["websiteContent", "websiteActivity"],
+        "required": ["none"],
         "optional": []
       }
     }
