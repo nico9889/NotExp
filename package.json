@@ -4,8 +4,8 @@
   "description": "One-click browser addon to export online notes to Xournal++ and RNote compatible formats",
   "type": "module",
   "scripts": {
-    "build": "node ./build.js",
-    "pack": "web-ext build --source-dir dist --overwrite-dest",
+    "build": "node ./build.js && web-ext lint --source-dir dist",
+    "pack": "web-ext lint --source-dir dist && web-ext build --source-dir dist --overwrite-dest",
     "start:firefox": "web-ext run --source-dir dist "
   },
   "keywords": [],
