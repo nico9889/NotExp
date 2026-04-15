@@ -5,7 +5,7 @@
   "default_locale": "en",
   "version": "2.2.1",
   "author": "nico9889",
-  "homepage_url": "https://github.com/nico9889/NotExp",
+  "homepage_url": "https://codeberg.org/nico9889/NotExp",
   "permissions": [
     "storage"
   ],
