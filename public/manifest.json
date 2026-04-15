@@ -10,8 +10,6 @@
     "storage"
   ],
   "host_permissions": [
-    "https://onedrive.live.com/*",
-    "https://*.sharepoint.com/*"
   ],
   "content_scripts": [
     {
