@@ -1,7 +1,8 @@
-import browser from "webextension-polyfill";
+import browser, {Runtime} from "webextension-polyfill";
 import {convertNote} from "./adapters/converter";
 import {Message} from "./messages";
 import {ConvertMessage} from "./messages/convert";
+import MessageSender = Runtime.MessageSender;
 
 /* TODO
 interface LogEnableMessage extends Message {
@@ -13,14 +14,16 @@ interface LogDebugMessage extends Message {
 }
  */
 
-browser.runtime.onMessage.addListener(async (msg) => {
-    const message = JSON.parse(msg.text) as (Message);
+browser.runtime.onMessage.addListener(async (request: any, _: MessageSender) => {
+    const message = request as (Message);
     if (message.message === 'convert') {
         try {
             await convertNote(message as ConvertMessage);
         } catch (e) {
             console.error(e);
         }
+    }else if(message.message === "ping"){
+        return {message: "pong"};
     }
     /* TODO
     else if (message.message === 'full_log') {

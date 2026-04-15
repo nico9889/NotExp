@@ -140,13 +140,23 @@ if(browser["sidebarAction"]){
 }
 
 
+
+async function checkAvailability(){
+    try{
+        const tab = (await browser.tabs.query({active: true, currentWindow: true}))[0];
+        const message: Message = (await browser.tabs.sendMessage(tab?.id ?? 0,{message: "ping"}));
+        return message.message === "pong";
+    }catch(e){
+        console.error("Content script is not available", e);
+        return false;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     const manifestData = browser.runtime.getManifest();
     semanticVersion.innerText = " " + manifestData.version;
 
-    const tab = (await browser.tabs.query({active: true, currentWindow: true}))[0];
-    if (!tab.url?.startsWith('https://onedrive.live.com/')
-        && !tab.url?.match("https:\\/\\/[a-zA-Z0-9-]+\\.sharepoint\\.com.*$")) {
+    if (!await checkAvailability()) {
         if (appSettings) {
             appSettings.outerHTML = "";
         }
@@ -304,10 +314,7 @@ enableDebugButton?.addEventListener('click', async () => {
  */
 
 exportButton?.addEventListener('click', async () => {
-    const granted = await browser.permissions.request({
-        origins: ["https://onenote.officeapps.live.com/*", "https://*.officeapps.live.com/*"]
-    });
-    if (!granted) {
+    if(!await checkAvailability()){
         writeLine({
             status: Status.ERROR,
             date: new Date(),
@@ -315,7 +322,6 @@ exportButton?.addEventListener('click', async () => {
         });
         return;
     }
-
     const tab = (await browser.tabs.query({active: true, currentWindow: true}))[0];
     try {
         const message: ConvertMessage = {
@@ -334,9 +340,7 @@ exportButton?.addEventListener('click', async () => {
             math_quality: Number(mathQuality.value) ?? 2,
             separateLayers: exportSeparateLayers?.checked ?? true
         }
-        await browser.tabs.sendMessage(tab?.id ?? 0, {
-            text: JSON.stringify(message)
-        });
+        await browser.tabs.sendMessage(tab?.id ?? 0, message);
     } catch (e) {
         writeLine({
             status: Status.ERROR,
