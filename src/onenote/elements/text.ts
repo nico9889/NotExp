@@ -57,7 +57,7 @@ export class Text {
         const fontFamily = getComputedStyle(text).getPropertyValue("font-family");
 
         // TODO: add the possibility to override export font
-        this.font = fontFamily.split(",")[1] ?? "Calibri";
+        this.font = (fontFamily.split(",")[1] ?? "Calibri").trim();
 
         this.fontSize = ((Number(window.getComputedStyle(text).getPropertyValue("font-size").replace("px", "")) ?? 12));
     }
