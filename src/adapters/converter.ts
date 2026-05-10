@@ -5,6 +5,7 @@ import {OneNote} from "../onenote/onenote";
 import {sanitizeFileName} from "./utils";
 import {ProgressTracker} from "./progress";
 import {convertToXopp} from "./xournalpp/xournalpp-adapter";
+import {convertToExcalidraw} from "./excalidraw/excalidraw-adapter";
 
 const PROGRESS = new ProgressTracker(6);
 
@@ -19,6 +20,8 @@ function selectAdapter(options: ConvertMessage): ((onenote: OneNote, progress: P
             return convertToXopp;
         case DocumentFormat.rnote:
             return convertToRnote;
+        case DocumentFormat.excalidraw:
+            return convertToExcalidraw;
         case DocumentFormat.xoz:
         default:
             throw Error("Not implemented");

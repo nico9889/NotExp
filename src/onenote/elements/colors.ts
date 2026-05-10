@@ -44,4 +44,17 @@ export class Color {
         this.b = round3(b);
         this.a = round3(a);
     }
+
+    hex(){
+        const r = Math.round(this.r * 255).toString(16);
+        const g = Math.round(this.g * 255).toString(16);
+        const b = Math.round(this.b * 255).toString(16);
+        return `#${r}${g}${b}`;
+    }
+
+    hexAlpha(){
+        const a = Math.round(this.a * 255).toString(16);
+        return `${this.hex()}${a}`;
+    }
+
 }
