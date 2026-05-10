@@ -36,7 +36,7 @@ async function writeImagesProperties(onenote: OneNote, index: IndexGenerator, ch
             link: null,
             locked: false,
             status: "pending",
-            fileId: (await image.uuid()).slice(0,40),
+            fileId: await image.uuid(),
             scale: [1, 1],
             crop: null
         }
@@ -54,12 +54,13 @@ async function writeImagesProperties(onenote: OneNote, index: IndexGenerator, ch
 async function writeImagesFiles(onenote: OneNote, chunks: string[]) {
     let exported = 0;
     for (const image of onenote.getImages()) {
-        const uuid = (await image.uuid()).slice(0,40);
+        const uuid = await image.uuid();
         const file: File = {
             mimeType: "image/png",
             id: uuid,
-            dataUrl: `data:image/png;base64,${await image.asEncodedPng()}`,
-            created: Date.now()
+            dataURL: `data:image/png;base64,${await image.asEncodedPng()}`,
+            created: Date.now(),
+            lastRetrieved: Date.now(),
         }
         if (exported) {
             chunks.push(',');

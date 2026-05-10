@@ -18,9 +18,9 @@ export interface AppState {
 export interface File{
     mimeType: string,
     id: string,
-    dataUrl: string,
+    dataURL: string,
     created: number,
-    lastRetrieved?: number
+    lastRetrieved?: number,
 }
 
 export interface Files {
