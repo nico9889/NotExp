@@ -25,5 +25,11 @@
     "typescript": "^6.0.2",
     "web-ext": "^10.1.0",
     "webextension-polyfill": "^0.12.0"
+  },
+  "dependencies": {
+    "@excalidraw/common": "^0.18.0-f0063e113",
+    "@excalidraw/element": "^0.18.0-f0063e113",
+    "@excalidraw/fractional-indexing": "^0.18.0-d255747",
+    "@excalidraw/math": "^0.18.0-f0063e113"
   }
 }

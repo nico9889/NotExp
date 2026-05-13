@@ -1,6 +1,7 @@
 import {OneNote} from "../onenote";
 import {round3} from "../../rnote/utils";
 import {blobToBase64} from "../../adapters/utils";
+import {FileId} from "@excalidraw/element/types";
 
 const IMAGE_BASE64_REGEXP = new RegExp("data:image/.*;base64,");
 
@@ -22,11 +23,11 @@ export function pack(data: ImageDataArray) {
 }
 
 export class ConvertibleImage {
-    private static canvas: OffscreenCanvas | undefined;
-    private static ctx: OffscreenCanvasRenderingContext2D | undefined;
-    private override_width: number | undefined = undefined;
-    private override_height: number | undefined = undefined;
-    private scale: number;
+    protected static canvas: OffscreenCanvas | undefined;
+    protected static ctx: OffscreenCanvasRenderingContext2D | undefined;
+    private readonly override_width: number | undefined = undefined;
+    private readonly override_height: number | undefined = undefined;
+    private readonly scale: number;
     private resolvedImage?: HTMLImageElement;
 
     constructor(protected imagePromise: Promise<HTMLImageElement>, private invertColors: boolean = false, scale: number = 1, override_width: number | undefined = undefined, override_height: number | undefined = undefined) {
@@ -43,18 +44,18 @@ export class ConvertibleImage {
     }
 
     protected getCanvas() {
-        if (!Image.canvas) {
-            Image.canvas = new OffscreenCanvas(0, 0);
+        if (!ConvertibleImage.canvas) {
+            ConvertibleImage.canvas = new OffscreenCanvas(0, 0);
         }
-        return Image.canvas;
+        return ConvertibleImage.canvas;
     }
 
     protected getCtx() {
-        if (!Image.ctx) {
+        if (!ConvertibleImage.ctx) {
             const canvas = this.getCanvas();
-            Image.ctx = canvas.getContext("2d")!;
+            ConvertibleImage.ctx = canvas.getContext("2d")!;
         }
-        return Image.ctx;
+        return ConvertibleImage.ctx;
     }
 
     async asEncodedPng(): Promise<string> {
@@ -162,11 +163,11 @@ export class Image extends ConvertibleImage {
         this.height = this.image.height;
     }
 
-    async uuid(): Promise<string> {
+    async uuid(): Promise<FileId> {
         if (!this.#uuid) {
             const encoder = new TextEncoder();
             const data = encoder.encode(this.image.src);
-            const buffer = await crypto.subtle.digest("SHA-256", data);
+            const buffer = await crypto.subtle.digest("SHA-1", data);
             this.#uuid = bufferToHex(buffer);
         }
         return this.#uuid;
