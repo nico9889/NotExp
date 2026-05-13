@@ -11,7 +11,6 @@ import {
 } from "@excalidraw/element/types";
 import {Radians, LocalPoint} from "@excalidraw/math";
 import {FONT_FAMILY, FONT_FAMILY_FALLBACKS, FONT_FAMILY_GENERIC_FALLBACKS} from "@excalidraw/common";
-import {Chunk} from "../../onenote/elements/text";
 
 async function writeImagesProperties(onenote: OneNote, index: IndexGenerator, chunks: string[]): Promise<number> {
     let exported = 0;
