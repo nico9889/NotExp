@@ -77,24 +77,77 @@ async function writeImagesFiles(onenote: OneNote, chunks: string[]) {
         chunks.push(output);
         exported += 1;
     }
+    return exported;
 }
 
 
-/* TODO
+
 async function writeMathProperties(onenote: OneNote, index: IndexGenerator, chunks: string[]): Promise<number> {
     let exported = 0;
     for (const math of onenote.getMath()) {
-        const width = await math.width();
-        const height = await math.height();
-
-        chunks.push(encoder.encode(','));
+        const element: ExcalidrawImageElement = {
+            id: idGenerator().next().value,
+            type: "image",
+            x: Math.floor(math.x),
+            y: Math.floor(math.y),
+            width: round3(await math.width()),
+            height: round3(await math.height()),
+            angle: 0 as Radians,
+            strokeColor: "transparent",
+            backgroundColor: "transparent",
+            fillStyle: "solid",
+            strokeWidth: 2,
+            strokeStyle: "solid",
+            roughness: 1,
+            opacity: 100,
+            groupIds: [],
+            frameId: null,
+            index: index.next(),
+            roundness: null,
+            seed: 0,
+            version: 0,
+            versionNonce: getNonce(),
+            isDeleted: false,
+            boundElements: null,
+            updated: Date.now(),
+            link: null,
+            locked: false,
+            status: "pending",
+            fileId: await math.uuid(),
+            scale: [1, 1],
+            crop: null
+        }
+        if (exported) {
+            chunks.push(',');
+        }
         const output = JSON.stringify(element);
-        chunks.push(encoder.encode(output));
+        chunks.push(output);
         exported += 1;
     }
     return exported;
 }
- */
+
+async function writeMathImagesFiles(onenote: OneNote, chunks: string[]) {
+    let exported = 0;
+    for (const math of onenote.getMath()) {
+        const uuid = await math.uuid();
+        const file: File = {
+            mimeType: "image/png",
+            id: uuid,
+            dataURL: `data:image/png;base64,${await math.asEncodedPng()}`,
+            created: Date.now(),
+            lastRetrieved: Date.now(),
+        }
+        if (exported) {
+            chunks.push(',');
+        }
+
+        const output = `"${uuid}": ${JSON.stringify(file)}`;
+        chunks.push(output);
+        exported += 1;
+    }
+}
+
 async function writeStrokes(onenote: OneNote, index: IndexGenerator, chunks: string[]): Promise<number> {
     let exported = 0;
     for (const stroke of onenote.getStrokes()) {
@@ -257,6 +310,13 @@ export async function convertToExcalidraw(onenote: OneNote, progress: ProgressTr
             chunks.push(",")
         }
 
+        await progress.bump();
+        const math_exported = await writeMathProperties(onenote, indexGenerator, chunks);
+        exported += math_exported;
+        if (images_exported) {
+            chunks.push(",")
+        }
+
         const strokes_exported = await writeStrokes(onenote, indexGenerator, chunks);
         exported += strokes_exported;
         if (strokes_exported) {
@@ -277,7 +337,18 @@ export async function convertToExcalidraw(onenote: OneNote, progress: ProgressTr
 
         chunks.push("\"files\": {")
 
-        await writeImagesFiles(onenote, chunks);
+        const image_files_exported = await writeImagesFiles(onenote, chunks);
+
+        if (image_files_exported) {
+            chunks.push(",");
+        }
+
+        await writeMathImagesFiles(onenote, chunks);
+
+        if (chunks[chunks.length - 1] === ",") {
+            chunks.pop();
+        }
+
         await progress.bump();
 
         chunks.push("},")

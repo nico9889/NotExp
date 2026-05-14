@@ -110,7 +110,7 @@ export class ConvertibleImage {
     }
 }
 
-function bufferToHex(buffer: ArrayBuffer): string {
+export function bufferToHex(buffer: ArrayBuffer): string {
     // @ts-ignore
     if (Uint8Array.prototype.toHex) {
         // Use toHex if supported.
