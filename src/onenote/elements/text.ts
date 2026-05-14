@@ -82,28 +82,72 @@ export class Text {
     // TODO: remove this function and the corresponding code in the converters. This wrap is unneccessary.
     * chunks(): Generator<Chunk> {
         if (!this.text.children) return;
-        for (let child of this.text.children) {
+        const offsets = this.document.offsets;
+        const zoom = this.document.zoom;
+
+        let line_buffer = "";
+        let total_width = 0;
+        let last_boundaries: DOMRectList | undefined = undefined;
+        let first_x: number | undefined = undefined;
+        for (const child of this.text.children) {
             // const htmlChild = child as HTMLElement;
             const nodeTextChild = child.firstChild as (HTMLElement | null);
             if (nodeTextChild) {
-                const lines = splitWrappedText(nodeTextChild);
-
-                const offsets = this.document.offsets;
-                const zoom = this.document.zoom;
-
                 const textBoundaries = child.getClientRects();
-                let index = 0;
-                for (const line of lines) {
-                    const rect = textBoundaries[index];
+                last_boundaries = textBoundaries;
+                const rect = textBoundaries[0];
+                const x = round3((rect.x - offsets.x) / zoom);
+                const y = round3((rect.y - offsets.y) / zoom);
+                const width = round3(rect.width / zoom);
+                total_width += width;
+                if(!first_x){
+                    first_x = x;
+                }
+                if (textBoundaries.length > 1) {
+                    const lines = splitWrappedText(nodeTextChild);
+                    
+                    line_buffer += lines.next().value;
 
-                    const x = round3((rect.x - offsets.x) / zoom);
-                    const y = round3((rect.y - offsets.y) / zoom);
+                    const rect = textBoundaries[0];
+                    yield {
+                        index: 0,
+                        line: line_buffer,
+                        x: first_x,
+                        y,
+                        width: total_width,
+                        height: round3(rect.height)
+                    };
 
-                    const width = round3(rect.width / zoom);
-                    yield {index: index++, line, x, y, width, height: round3(rect.height)};
+                    // This function is not able to handle text lines that have been wrapped more than 2 times, but
+                    // this should be a very edge case.
+                    const next = lines.next().value;
+                    if (next) {
+                        const next_rect = textBoundaries[1];
+                        yield {
+                            index: 0,
+                            line: next,
+                            x: round3((next_rect.x - offsets.x) / zoom),
+                            y: round3((next_rect.y - offsets.y) / zoom),
+                            width: round3(next_rect.width / zoom),
+                            height: round3(rect.height)
+                        };
+                    }
+                    line_buffer = "";
+                    first_x = undefined;
+                } else {
+                    line_buffer += nodeTextChild.textContent;
                 }
             }
+        }
+        if (last_boundaries && line_buffer) {
+            const rect = last_boundaries[0];
+            const x = round3((rect.x - offsets.x) / zoom);
+            const y = round3((rect.y - offsets.y) / zoom);
 
+            const width = round3(rect.width / zoom);
+            const height = round3(rect.height);
+            yield {index: 0, line: line_buffer, x: first_x  ?? x, y, width: total_width ?? width, height}
         }
     }
+
 }
