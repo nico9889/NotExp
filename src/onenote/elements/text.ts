@@ -23,12 +23,12 @@ function* splitWrappedText(text: HTMLElement) {
 }
 
 export interface Chunk {
-    index: number,
-    line: string,
-    x: number,
-    y: number,
-    width: number
-    height: number
+    readonly index: number,
+    readonly line: string,
+    readonly x: number,
+    readonly y: number,
+    readonly width: number
+    readonly height: number
 }
 
 export class Text {
@@ -99,13 +99,12 @@ export class Text {
                 const x = round3((rect.x - offsets.x) / zoom);
                 const y = round3((rect.y - offsets.y) / zoom);
                 const width = round3(rect.width / zoom);
+                const height = round3(rect.height);
                 total_width += width;
-                if(!first_x){
-                    first_x = x;
-                }
+                first_x = first_x ?? x;
                 if (textBoundaries.length > 1) {
                     const lines = splitWrappedText(nodeTextChild);
-                    
+
                     line_buffer += lines.next().value;
 
                     const rect = textBoundaries[0];
@@ -115,7 +114,7 @@ export class Text {
                         x: first_x,
                         y,
                         width: total_width,
-                        height: round3(rect.height)
+                        height
                     };
 
                     // This function is not able to handle text lines that have been wrapped more than 2 times, but
