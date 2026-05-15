@@ -1,9 +1,9 @@
-import {browserAdaptor} from "@mathjax/src/mjs/adaptors/browserAdaptor.js";
-import {RegisterHTMLHandler} from "@mathjax/src/mjs/handlers/html.js";
-import {mathjax} from '@mathjax/src/mjs/mathjax.js';
-import {MathML} from "@mathjax/src/mjs/input/mathml.js";
-import {SVG} from "@mathjax/src/mjs/output/svg.js";
-import {MathDocument} from "@mathjax/src/mjs/core/MathDocument";
+import {browserAdaptor} from "@mathjax/src/js/adaptors/browserAdaptor.js";
+import {RegisterHTMLHandler} from "@mathjax/src/js/handlers/html.js";
+import {mathjax} from '@mathjax/src/js/mathjax.js';
+import {MathML} from "@mathjax/src/js/input/mathml.js";
+import {SVG} from "@mathjax/src/js/output/svg.js";
+import {MathDocument} from "@mathjax/src/js/core/MathDocument.js";
 
 import {OneNote} from "../onenote";
 import {bufferToHex, ConvertibleImage} from "./image";

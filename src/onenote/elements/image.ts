@@ -110,7 +110,7 @@ export class ConvertibleImage {
     }
 }
 
-export function bufferToHex(buffer: ArrayBuffer): string {
+export function bufferToHex(buffer: ArrayBuffer): FileId {
     // @ts-ignore
     if (Uint8Array.prototype.toHex) {
         // Use toHex if supported.
@@ -122,7 +122,7 @@ export function bufferToHex(buffer: ArrayBuffer): string {
     // convert bytes to hex string
     return hashArray
         .map((b) => b.toString(16).padStart(2, "0"))
-        .join("");
+        .join("") as FileId;
 }
 
 export class Image extends ConvertibleImage {
@@ -170,7 +170,7 @@ export class Image extends ConvertibleImage {
             const buffer = await crypto.subtle.digest("SHA-1", data);
             this.#uuid = bufferToHex(buffer);
         }
-        return this.#uuid;
+        return this.#uuid as FileId;
     }
 
 }
