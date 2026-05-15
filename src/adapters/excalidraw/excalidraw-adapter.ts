@@ -240,7 +240,9 @@ async function writeTexts(onenote: OneNote, index: IndexGenerator, chunks: strin
                     containerId: null,
                     // @ts-ignore
                     fontFamily: getFontFamilyId(fontFamily),
-                    fontSize: text.fontSize, // TODO: check why this is wrong
+                    // FIXME: this is 100% wrong. Scaling by 0.86x help to fix the font-size a lot, but this is true only
+                    //   if the font-family is serif, and it may be wrong with other font types
+                    fontSize: text.fontSize * 0.86,
                     lineHeight: 1 as ExcalidrawTextElement["lineHeight"],
                     originalText: chunk.line,
                     text: chunk.line,
