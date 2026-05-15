@@ -315,7 +315,7 @@ export async function convertToExcalidraw(onenote: OneNote, progress: ProgressTr
         await progress.bump();
         const math_exported = await writeMathProperties(onenote, indexGenerator, chunks);
         exported += math_exported;
-        if (images_exported) {
+        if (math_exported) {
             chunks.push(",")
         }
 
