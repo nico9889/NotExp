@@ -28,7 +28,7 @@ export class Stroke {
 
         const stroke = path.getAttribute("stroke");
         const colors = (stroke) ? COLOR_REGEXP.exec(stroke) : undefined;
-        let [r,g,b,a] = [0,0,0,1];
+        let [r, g, b, a] = [0, 0, 0, 1];
         if (colors) {
             r = round3(Number(colors[1]) / 255);
             g = round3(Number(colors[2]) / 255);
@@ -38,7 +38,7 @@ export class Stroke {
         const opacity = path.getAttribute("opacity");
         a = (opacity) ? Number(opacity) : 1;
 
-        this.color = new Color(r,g,b,a, document.options.strokes_dark_mode);
+        this.color = new Color(r, g, b, a, document.options.strokes_dark_mode);
         this.directives = path.getAttribute("d")?.split(" ");
 
 
@@ -77,10 +77,10 @@ export class Stroke {
             const directive = directives[i];
 
             if (directive === "M") {
-                const x = round3((Number(directives[i + 1])- this.viewBox.x) * this.scales.x + this.offsets.x);
-                const y = round3((Number(directives[i + 2])- this.viewBox.y) * this.scales.y + this.offsets.y);
+                const x = round3((Number(directives[i + 1]) - this.viewBox.x) * this.scales.x + this.offsets.x);
+                const y = round3((Number(directives[i + 2]) - this.viewBox.y) * this.scales.y + this.offsets.y);
                 yield [
-                    x,y
+                    x, y
                 ];
                 previous_x = x;
                 previous_y = y;
@@ -91,9 +91,9 @@ export class Stroke {
                 let next_x = previous_x + (parseInt(directives[i]) * this.scales.x);
                 let next_y = previous_y + (parseInt(directives[i + 1]) * this.scales.y);
 
-                while(!isNaN(next_x) && !isNaN(next_y)){
+                while (!isNaN(next_x) && !isNaN(next_y)) {
                     yield [round3(next_x), round3(next_y)];
-                    i+=2;
+                    i += 2;
                     next_x += (parseInt(directives[i]) * this.scales.x);
                     next_y += (parseInt(directives[i + 1]) * this.scales.y);
                 }

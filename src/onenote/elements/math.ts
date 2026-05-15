@@ -6,9 +6,10 @@ import {SVG} from "@mathjax/src/mjs/output/svg.js";
 import {MathDocument} from "@mathjax/src/mjs/core/MathDocument";
 
 import {OneNote} from "../onenote";
-import {ConvertibleImage} from "./image";
+import {bufferToHex, ConvertibleImage} from "./image";
 import {MathMLToLaTeX} from "mathml-to-latex";
 import {round3} from "../../rnote/utils";
+import {FileId} from "@excalidraw/element/types";
 
 const adaptor = browserAdaptor();
 RegisterHTMLHandler(adaptor);
@@ -31,6 +32,7 @@ export class Math extends ConvertibleImage {
     readonly math: HTMLSpanElement;
     static mathDocument: MathDocument<any, any, any> | undefined = undefined;
     private image: HTMLImageElement | undefined;
+    #uuid?: FileId = undefined;
 
     constructor(document: OneNote, math: HTMLSpanElement) {
         super(Math.mathToImage(math),
@@ -102,5 +104,14 @@ export class Math extends ConvertibleImage {
         return image.height;
     }
 
+    async uuid(): Promise<FileId> {
+        if (!this.#uuid) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(this.math.innerHTML);
+            const buffer = await crypto.subtle.digest("SHA-1", data);
+            this.#uuid = bufferToHex(buffer);
+        }
+        return this.#uuid;
+    }
 
 }

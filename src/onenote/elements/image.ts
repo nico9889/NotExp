@@ -1,6 +1,7 @@
 import {OneNote} from "../onenote";
 import {round3} from "../../rnote/utils";
 import {blobToBase64} from "../../adapters/utils";
+import {FileId} from "@excalidraw/element/types";
 
 const IMAGE_BASE64_REGEXP = new RegExp("data:image/.*;base64,");
 
@@ -22,39 +23,39 @@ export function pack(data: ImageDataArray) {
 }
 
 export class ConvertibleImage {
-    private static canvas: OffscreenCanvas | undefined;
-    private static ctx: OffscreenCanvasRenderingContext2D | undefined;
-    private override_width: number | undefined = undefined;
-    private override_height: number | undefined = undefined;
-    private scale: number;
+    protected static canvas: OffscreenCanvas | undefined;
+    protected static ctx: OffscreenCanvasRenderingContext2D | undefined;
+    private readonly override_width: number | undefined = undefined;
+    private readonly override_height: number | undefined = undefined;
+    private readonly scale: number;
     private resolvedImage?: HTMLImageElement;
 
-    constructor(protected imagePromise: Promise<HTMLImageElement>, private invertColors: boolean=false, scale: number = 1, override_width: number | undefined = undefined, override_height: number | undefined = undefined) {
+    constructor(protected imagePromise: Promise<HTMLImageElement>, private invertColors: boolean = false, scale: number = 1, override_width: number | undefined = undefined, override_height: number | undefined = undefined) {
         this.override_width = override_width;
         this.override_height = override_height;
         this.scale = scale;
     }
 
-    private async getResolvedImage(){
-        if(!this.resolvedImage){
+    private async getResolvedImage() {
+        if (!this.resolvedImage) {
             this.resolvedImage = await this.imagePromise;
         }
         return this.resolvedImage;
     }
 
     protected getCanvas() {
-        if (!Image.canvas) {
-            Image.canvas = new OffscreenCanvas(0, 0);
+        if (!ConvertibleImage.canvas) {
+            ConvertibleImage.canvas = new OffscreenCanvas(0, 0);
         }
-        return Image.canvas;
+        return ConvertibleImage.canvas;
     }
 
     protected getCtx() {
-        if (!Image.ctx) {
+        if (!ConvertibleImage.ctx) {
             const canvas = this.getCanvas();
-            Image.ctx = canvas.getContext("2d")!;
+            ConvertibleImage.ctx = canvas.getContext("2d")!;
         }
-        return Image.ctx;
+        return ConvertibleImage.ctx;
     }
 
     async asEncodedPng(): Promise<string> {
@@ -69,7 +70,7 @@ export class ConvertibleImage {
         if (ctx && !isPng.test(src)) {
             canvas.width = image.width * this.scale;
             canvas.height = image.height * this.scale;
-            if(this.invertColors){
+            if (this.invertColors) {
                 ctx.filter = 'invert(1)';
             }
             ctx.drawImage(image, 0, 0, this.override_width || image.width, this.override_height || image.height);
@@ -88,7 +89,7 @@ export class ConvertibleImage {
 
         canvas.width = image.width * this.scale;
         canvas.height = image.height * this.scale;
-        if(this.invertColors){
+        if (this.invertColors) {
             ctx.filter = 'invert(1)';
         }
         ctx.drawImage(image, 0, 0, this.override_width || image.width, this.override_height || image.height);
@@ -109,6 +110,21 @@ export class ConvertibleImage {
     }
 }
 
+export function bufferToHex(buffer: ArrayBuffer): string {
+    // @ts-ignore
+    if (Uint8Array.prototype.toHex) {
+        // Use toHex if supported.
+        // @ts-ignore
+        return new Uint8Array(buffer).toHex(); // Convert ArrayBuffer to hex string.
+    }
+    // If toHex() is not supported, fall back to an alternative implementation.
+    const hashArray = Array.from(new Uint8Array(buffer)); // convert buffer to byte array
+    // convert bytes to hex string
+    return hashArray
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+}
+
 export class Image extends ConvertibleImage {
     readonly document: OneNote;
     readonly container: HTMLDivElement;
@@ -117,6 +133,7 @@ export class Image extends ConvertibleImage {
     readonly width: number;
     readonly height: number;
     readonly image: HTMLImageElement;
+    #uuid?: string;
 
     constructor(document: OneNote, container: HTMLDivElement) {
         super(new Promise<HTMLImageElement>((resolve, _) => {
@@ -125,7 +142,6 @@ export class Image extends ConvertibleImage {
         this.document = document;
         this.container = container;
         this.image = (container.getElementsByClassName("WACImage") as HTMLCollectionOf<HTMLImageElement>)[0];
-
 
 
         const offsets = this.document.offsets;
@@ -147,5 +163,14 @@ export class Image extends ConvertibleImage {
         this.height = this.image.height;
     }
 
+    async uuid(): Promise<FileId> {
+        if (!this.#uuid) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(this.image.src);
+            const buffer = await crypto.subtle.digest("SHA-1", data);
+            this.#uuid = bufferToHex(buffer);
+        }
+        return this.#uuid;
+    }
 
 }

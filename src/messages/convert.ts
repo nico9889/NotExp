@@ -9,7 +9,8 @@ export enum MathQuality {
 export enum DocumentFormat {
     xopp = 0,
     xoz = 1, // TODO: https://codeberg.org/nico9889/OneNote2Xournalpp
-    rnote = 10
+    rnote = 10,
+    excalidraw = 20
 }
 
 export function formatToString(format: DocumentFormat){
@@ -20,6 +21,8 @@ export function formatToString(format: DocumentFormat){
             return "Xournal++ (.xoz)";
         case DocumentFormat.rnote:
             return "RNote (.rnote)";
+        case DocumentFormat.excalidraw:
+            return "Excalidraw (.excalidraw)";
     }
 }
 
@@ -31,10 +34,12 @@ export function formatToExt(format: DocumentFormat){
             return "xoz";
         case DocumentFormat.rnote:
             return "rnote";
+        case DocumentFormat.excalidraw:
+            return "excalidraw";
     }
 }
 
-export const implementedFormats = [DocumentFormat.xopp, DocumentFormat.rnote];
+export const implementedFormats = [DocumentFormat.xopp, DocumentFormat.rnote, DocumentFormat.excalidraw];
 
 export interface ConvertMessage extends Message {
     format: DocumentFormat,
