@@ -76,5 +76,8 @@
   },
   "openOnSide": {
     "message": "Apri a lato"
+  },
+  "restrictedPagesFeedback": {
+    "message": "Se pensi che questo messaggio sia stato mostrato per errore, riporta il problema qui: "
   }
 }
