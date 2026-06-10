@@ -13,19 +13,18 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "@mathjax/src": "^4.1.2",
-    "@types/chrome": "^0.1.42",
+    "@types/chrome": "^0.1.43",
     "@types/firefox": "^0.0.34",
-    "@types/web": "^0.0.349",
+    "@types/web": "^0.0.350",
     "@types/webextension-polyfill": "^0.12.5",
     "esbuild": "^0.28.0",
-    "html-minifier-next": "^6.2.4",
+    "html-minifier-next": "^6.2.11",
     "mathjax": "^4.1.2",
-    "mathml-to-latex": "^1.5.0",
+    "mathml-to-latex": "^1.8.0",
     "node-html-parser": "^7.1.0",
     "typescript": "^6.0.3",
-    "web-ext": "^10.1.0",
-    "webextension-polyfill": "^0.12.0",
-    "@xmldom/xmldom": "0.9.10"
+    "web-ext": "^10.3.0",
+    "webextension-polyfill": "^0.12.0"
   },
   "dependencies": {
     "@excalidraw/common": "^0.18.0-f0063e113",
