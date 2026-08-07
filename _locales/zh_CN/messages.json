@@ -1,80 +1,80 @@
 {
-  "restrictedPages": {
-    "message": ""
-  },
-  "fileNameLabel": {
-    "message": ""
-  },
-  "emptyNameInfo": {
-    "message": ""
-  },
-  "exportButton": {
-    "message": ""
-  },
-  "progressBarLabel": {
-    "message": ""
-  },
-  "exportOptionsLabel": {
-    "message": ""
-  },
-  "exportStrokesLabel": {
-    "message": ""
-  },
-  "exportImagesLabel": {
-    "message": ""
-  },
-  "exportTextsLabel": {
-    "message": ""
-  },
-  "exportMathLabel": {
-    "message": ""
-  },
-  "exportSeparateLayersLabel": {
-    "message": ""
-  },
-  "mathQualityLabel": {
-    "message": ""
-  },
-  "mathLowQuality": {
-    "message": ""
-  },
-  "mathMediumQuality": {
-    "message": ""
-  },
-  "mathHighQuality": {
-    "message": ""
-  },
-  "pageOptionsLabel": {
-    "message": ""
-  },
-  "exportDarkModeLabel": {
-    "message": ""
-  },
-  "sourceCodeText": {
-    "message": ""
-  },
-  "addonText": {
-    "message": ""
-  },
-  "donateText": {
-    "message": ""
-  },
-  "reportIssueText": {
-    "message": ""
-  },
-  "versionLabel": {
-    "message": ""
-  },
-  "changelogHref": {
-    "message": ""
-  },
-  "fileFormatLabel": {
-    "message": ""
-  },
-  "openOnSide": {
-    "message": ""
-  },
-  "restrictedPagesFeedback": {
-    "message": ""
-  }
+    "restrictedPages": {
+        "message": ""
+    },
+    "fileNameLabel": {
+        "message": "文件名："
+    },
+    "emptyNameInfo": {
+        "message": ""
+    },
+    "exportButton": {
+        "message": "导出"
+    },
+    "progressBarLabel": {
+        "message": ""
+    },
+    "exportOptionsLabel": {
+        "message": ""
+    },
+    "exportStrokesLabel": {
+        "message": "导出笔画"
+    },
+    "exportImagesLabel": {
+        "message": ""
+    },
+    "exportTextsLabel": {
+        "message": ""
+    },
+    "exportMathLabel": {
+        "message": ""
+    },
+    "exportSeparateLayersLabel": {
+        "message": ""
+    },
+    "mathQualityLabel": {
+        "message": ""
+    },
+    "mathLowQuality": {
+        "message": ""
+    },
+    "mathMediumQuality": {
+        "message": ""
+    },
+    "mathHighQuality": {
+        "message": ""
+    },
+    "pageOptionsLabel": {
+        "message": ""
+    },
+    "exportDarkModeLabel": {
+        "message": ""
+    },
+    "sourceCodeText": {
+        "message": ""
+    },
+    "addonText": {
+        "message": ""
+    },
+    "donateText": {
+        "message": ""
+    },
+    "reportIssueText": {
+        "message": ""
+    },
+    "versionLabel": {
+        "message": ""
+    },
+    "changelogHref": {
+        "message": ""
+    },
+    "fileFormatLabel": {
+        "message": ""
+    },
+    "openOnSide": {
+        "message": ""
+    },
+    "restrictedPagesFeedback": {
+        "message": ""
+    }
 }
