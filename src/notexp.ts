@@ -215,7 +215,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const items = await browser.storage.local.get(["o2x-settings"]);
   if (items["o2x-settings"]) {
-    settings = items["o2x-settings"];
+    settings = items["o2x-settings"] as Settings;
   }
 
   exportImages.checked = Boolean(settings.export_images);
@@ -400,8 +400,8 @@ function writeLine(line: LogLine) {
 
 let oldStatus: ProgressStatus = ProgressStatus.Ok;
 
-browser.runtime.onMessage.addListener(async (msg) => {
-  const message = msg.text as Message;
+browser.runtime.onMessage.addListener(async (msg: unknown) => {
+  const message = (msg as { text: Message }).text;
   if (message.message === "progress") {
     const status = (message as ProgressMessage).status;
     if (status !== oldStatus) {

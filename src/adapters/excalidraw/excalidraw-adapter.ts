@@ -237,11 +237,12 @@ async function writeStrokes(
 }
 
 function getFontFamilyId(fontFamily: string) {
-  // @ts-ignore
-  const id: number =
-    FONT_FAMILY[fontFamily] ??
-    FONT_FAMILY_FALLBACKS[fontFamily] ??
-    FONT_FAMILY_GENERIC_FALLBACKS[fontFamily];
+  const fontFamilies: Record<string, number> = {
+    ...FONT_FAMILY_GENERIC_FALLBACKS,
+    ...FONT_FAMILY_FALLBACKS,
+    ...FONT_FAMILY,
+  };
+  const id: number | undefined = fontFamilies[fontFamily];
   if (id === undefined) {
     console.warn(`No Font ID found for font-family '${fontFamily}'`);
     return FONT_FAMILY.Excalifont;

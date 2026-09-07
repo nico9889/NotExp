@@ -1,4 +1,4 @@
-import {Element} from "./elements";
+import {ExcalidrawElement} from "@excalidraw/element/types";
 
 export interface Zoom {
     value: number;
@@ -31,7 +31,7 @@ export interface Document {
     type: "excalidraw",
     version: number,
     source: string,
-    elements: Element[];
+    elements: ExcalidrawElement[];
     appState: AppState;
     files: Files
 }
